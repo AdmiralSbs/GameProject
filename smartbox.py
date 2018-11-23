@@ -47,5 +47,6 @@ def create_map_from_list(locations, dicty, xscale, yscale):
                 raise Exception("Locations contained key not in dict")
             if isinstance(dicty[iden], gamebox.SpriteBox):
                 created.append(dicty[iden].copy_at((column + 0.5) * xscale, (row + 0.5) * yscale))
+                created[-1].tags = dicty[iden].tags
 
     return created
