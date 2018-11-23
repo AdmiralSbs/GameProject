@@ -50,3 +50,23 @@ def create_map_from_list(locations, dicty, xscale, yscale):
                 created[-1].tags = dicty[iden].tags
 
     return created
+
+
+def create_list_from_excel(file):
+    """Given an excel file that holds the numbers as they will appear
+    Reads in the information, transposes as required and returns
+    a properly formatted list of lists
+
+    :param file: File location
+    :return: List of lists for use in above method
+    """
+    with open(file) as excel:
+        parts = excel.read().split("\n")
+    lines = []
+    for i in range(len(parts)):
+        thing = parts[i].strip("ï»¿")
+        lines.append(thing)
+
+
+
+

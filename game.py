@@ -3,6 +3,21 @@ import pygame
 import gamebox
 import smartbox
 
+"""
+We are making a mini version of "Smash Bros", which will be a two player PVP game.
+Each player will control a character who will use ranged attacks to lower the health of their opponent.
+The map will include platforms and such
+Relevant physics will be present
+
+
+Optional Features:
+Animation - characters will have various sprite states
+Scrolling level - camera will be zoomed in on map based on distance between players
+Collectibles - Power ups can spawn that will affect gameplay
+Two Players Simultaneously - As described above
+
+
+"""
 scale = 50
 stuff = {
     0: None,
