@@ -4,7 +4,6 @@ import gamebox
 import smartbox
 
 
-
 scale = 50
 stuff = {
     0: None,
