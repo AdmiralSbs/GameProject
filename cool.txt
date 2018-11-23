@@ -1,0 +1,68 @@
+Okay so I did some digging into gamebox.py to find what we can fuck with and oh boy...
+
+Attributes we can get (and what we get) from a SpriteBox:
+        x (self.x)
+        y (self.y)
+        w (self._w)
+        h (self._h)
+        xspeed (speedx)
+        yspeed (speedy)
+        left (x - w/2)
+        right (x + w/2)
+        top (y - h/2)
+        bottom (y + h/2)
+        center (x, y)
+        topleft (x - w / 2, y - h / 2)
+        topright (x + w / 2, y - h / 2)
+        bottomleft (x - w / 2, y + h / 2)
+        bottomright (x + w / 2, y + h / 2)
+        width (w)
+        height (h)
+        size (w, h)
+        speed (self.speedx, self.speedy)
+        rect (pygame.Rect(self.topleft, self.size))
+        image (self.__dict__['image'])
+        custom (self.__dict__['custom'])
+
+Attributes we can set (and what actually gets changed) from a SpriteBox:
+        w, h = self._w, self._h
+        xspeed (speedx = value)
+        yspeed (speedy = value)
+        custom (self.__dict__['custom'] = value)
+
+        left (self.x = value + w / 2)
+        right (self.x = value - w / 2)
+        top (self.y = value + h / 2)
+        bottom (self.y = value - h / 2)
+        center (self.x, self.y = value[0], value[1])
+        topleft (self.x, self.y = value[0] + w / 2, value[1] + h / 2)
+        topright (self.x, self.y = value[0] - w / 2, value[1] + h / 2)
+        bottomleft (self.x, self.y = value[0] + w / 2, value[1] - h / 2)
+        bottomright (self.x, self.y = value[0] - w / 2, value[1] - h / 2)
+        width (self.scale_by(value/w)
+        height (self.scale_by(value/h)
+        size [if it has image] (I really couldn't tell you)
+        size [if no image] (self.__dict__['_w'] = value[0]; self.__dict__['_h'] = value[1])
+        speed (self.speedx, self.speedy = value[0], value[1])
+        color (clears image, sets the color)
+        image (clears color, sets the image)
+
+All the methods we'll never need: for a sprite
+    overlap (checks for it, returns which aspect is the worst)
+    touches (checks for it, returns boolean)
+    bottom_touches
+    top_touches
+    left_touches
+    right_touches
+    contains (checks if a point is in the bounding box)
+    move_to_stop_overlapping (moves sprite away in worst offending direction, kills speed if need be)
+    move_both_to_stop_overlapping
+    move (moves by a given distance)
+    move_speed (moves a distance as given by the speeds)
+    full_size (restores an image sprite to the size of the sprite itself)
+    copy_at (creates a copy sprite at the location)
+    copy (creates a copy sprite at current location)
+    scale_by (scales width and height by aspect ratio)
+    draw (same effect as camera.draw())
+    flip (flips sprite on y axis)
+    rotate (I don't know the direction yet)
