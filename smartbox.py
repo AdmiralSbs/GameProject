@@ -44,7 +44,7 @@ def create_map_from_list(locations, dicty, xscale, yscale):
         for row in range((len(locations[column]))):
             iden = locations[column][row]
             if iden not in dicty.keys():
-                raise Exception("Locations contained key not in dict")
+                raise Exception("Locations contained key ", str(iden), "not in dict")
             if isinstance(dicty[iden], gamebox.SpriteBox):
                 created.append(dicty[iden].copy_at((column + 0.5) * xscale, (row + 0.5) * yscale))
                 created[-1].tags = dicty[iden].tags
@@ -65,8 +65,19 @@ def create_list_from_excel(file):
     lines = []
     for i in range(len(parts)):
         thing = parts[i].strip("ï»¿")
-        lines.append(thing)
+        lines.append(thing.split(","))
+    final_lines = []
+    for x in range(len(lines[0])):
+        final_lines.append([])
 
+    for line in lines:
+        if line == [""]: continue
+        for spot in range(len(line)):
+            if (line[spot] != ""):
+                final_lines[spot].append(line[spot])
+            else:
+                final_lines[spot].append("0")
 
-
-
+    print(lines)
+    print(final_lines)
+    return final_lines

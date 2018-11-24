@@ -20,11 +20,11 @@ Two Players Simultaneously - As described above
 """
 scale = 50
 stuff = {
-    0: None,
-    1: gamebox.from_color(0, 0, "red", scale, scale),
-    2: gamebox.from_color(0, 0, "blue", scale, scale),
-    3: gamebox.from_color(0, 0, "blue", scale, scale),
-    4: gamebox.from_color(0, 0, "blue", scale, scale),
+    "0": None,
+    "1": gamebox.from_color(0, 0, "red", scale, scale),
+    "2": gamebox.from_color(0, 0, "blue", scale, scale),
+    "3": gamebox.from_color(0, 0, "blue", scale, scale),
+    "4": gamebox.from_color(0, 0, "blue", scale, scale),
 }
 tags = [
     [],
@@ -56,9 +56,11 @@ locations = [
     [2] * 10,
 ]
 
-walls = smartbox.create_map_from_list(locations, stuff, scale, scale)
-max_width = len(locations) * scale
-max_height = smartbox.max_size(locations) * scale
+locations2 = smartbox.create_list_from_excel("maps\\map1.csv")
+
+walls = smartbox.create_map_from_list(locations2, stuff, scale, scale)
+max_width = len(locations2) * scale
+max_height = smartbox.max_size(locations2) * scale
 camera = gamebox.Camera(max_width, max_height)
 player = gamebox.from_color(100, 100, "yellow", 10, 10)
 
