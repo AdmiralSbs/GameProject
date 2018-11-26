@@ -37,7 +37,8 @@ tags = [
 for i in range(len(tags)):
     if stuff[list(stuff.keys())[i]] != None:
         stuff[list(stuff.keys())[i]].tags = tags[i]
-
+"""
+A sample of what a map could look like (made in program)
 locations = [
     [2] * 10,
     [2, 0, 0, 0, 0, 0, 0, 0, 0, 4],
@@ -55,6 +56,7 @@ locations = [
     [2, 0, 0, 0, 0, 0, 0, 0, 0, 4],
     [2] * 10,
 ]
+"""
 
 locations2 = smartbox.create_list_from_excel("maps\\map1.csv")
 
@@ -75,7 +77,7 @@ def tick(keys):
     if pygame.K_s in keys:
         player.move(0, 5)
 
-    player.move_speed()
+    # player.move_speed()
 
     for wall in walls:
         if "wall" in wall.tags:

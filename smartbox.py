@@ -17,6 +17,7 @@ def draw_object(sprite, camera):
     :param camera:  A Camera object as defined by gamebox
     :return: None
     """
+    # Custom errors to make me feel special
     if not isinstance(sprite, gamebox.SpriteBox):
         raise Exception("First parameter must be SpriteBox")
     if not isinstance(camera, gamebox.Camera):
@@ -28,7 +29,7 @@ def draw_object(sprite, camera):
         sprite.draw(camera)
 
 
-blocks = {0: gamebox.from_color(0, 0, "red", 50, 50)}
+# blocks = {0: gamebox.from_color(0, 0, "red", 50, 50)}
 
 
 def create_map_from_list(locations, dicty, xscale, yscale):
@@ -57,15 +58,21 @@ def create_list_from_excel(file):
     Reads in the information, transposes as required and returns
     a properly formatted list of lists
 
+    Fle itself has data organized as it will appear on screen, this method transposes
+    that data into the style handled by the above function
+
     :param file: File location
     :return: List of lists for use in above method
     """
+    # Get all the lines
     with open(file) as excel:
         parts = excel.read().split("\n")
     lines = []
     for i in range(len(parts)):
         thing = parts[i].strip("ï»¿")
         lines.append(thing.split(","))
+
+    # Transpose all the lines
     final_lines = []
     for x in range(len(lines[0])):
         final_lines.append([])
@@ -78,6 +85,6 @@ def create_list_from_excel(file):
             else:
                 final_lines[spot].append("0")
 
-    print(lines)
-    print(final_lines)
+    # print(lines)
+    # print(final_lines)
     return final_lines
