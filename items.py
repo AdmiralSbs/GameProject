@@ -12,7 +12,7 @@ class Item:
 
 
 class Player:
-    def __init__(self, name, move_list, object):
+    def __init__(self, name, move_list, object, inventory):
         self.name = name
         self.move = move_list
         self.object = object
@@ -24,6 +24,10 @@ upsorn_moves = ['Piazza Ask', 'Live Code', 'Teach Lecture', 'Wholesome Email']
 enemy_moves = ['Vague Answer', 'People\'s United', 'PA Reject', 'LAB DESTROY']
 
 for_loop = Item("FOR_LOOP", 'item', '1', gamebox.from_text(0, 0, "FOR", 12, "yellow", bold=True, italic=False))
-while_loop = Item('WHILE_LOOP', 'item', '2', None, )
-dictionary = Item('DICT', 'item', '3', None, )
-list = Item('LIST', 'item', '4', None)
+while_loop = Item('WHILE_LOOP', 'item', '2', gamebox.from_text(0, 0, "WHILE", 12, "red", bold=True, italic=False))
+dictionary = Item('DICT', 'item', '3', gamebox.from_text(0, 0, "DICT", 12, "lightblue", bold=True, italic=False))
+list = Item('LIST', 'item', '4', gamebox.from_text(0, 0, "LIST", 12, "gray", bold=True, italic=False))
+
+enemy1 = Player('Bob', enemy_moves, '5', gamebox.from_color(0,0,'red',50,50),None)
+
+inventory =[]
