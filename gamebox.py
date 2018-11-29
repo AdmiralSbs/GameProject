@@ -282,7 +282,7 @@ class Camera(object):
         elif name in ['width', 'height', 'size', 'mouse', 'mousex', 'mousey', 'mouseclick']:
             raise Exception("You cannot change the '" + name + "' of a Camera object")
         else:
-            sys.stderr.write("INFO: added \"" + name + "\" to camera")
+            # sys.stderr.write("INFO: added \"" + name + "\" to camera")
             self.__dict__[name] = value
 
     def __repr__(self):
@@ -412,7 +412,7 @@ class SpriteBox(object):
                 key = self.__dict__['_key']
                 self._set_key(value, *key[1:])
         else:
-            sys.stderr.write("INFO: added \"" + name + "\" to box")
+            # sys.stderr.write("INFO: added \"" + name + "\" to box")
             self.__dict__[name] = value
 
     def overlap(self, other, padding=0, padding2=None):
