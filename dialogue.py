@@ -3,29 +3,22 @@ import gamebox
 import pygame
 
 
-def step(keys):
-    """ Do all the stuff"""
-
 class Dialogue:
     exists = False
     buffer = 5
     font_size = 36
 
-    def setup(self, x, y, w, h, cam):
+    def setup(self, x, y, w, h, fs):
         if Dialogue.exists:
             raise Exception("You can only have one Dialogue at a time!")
         self.background = gamebox.from_color(x, y, "white", w, h)
         exists = True
-        self.camera = cam
-        self.pieces = []
+        Dialogue.fs = fs
 
-    def get_dialogue(self, lines, ticks):
+    def get_max_height(self, lines):
         height = max([gamebox.from_text(0, 0, line, Dialogue.font_size, "white").height for line in lines])
         available = self.background.height - Dialogue.buffer * 2
-        linespace = max(available // height, 1)
-
-        gamebox.timer_loop(30, step)
-
+        return max(available // height, 1)
 
     def calc_lines(self, text):
         lines = []
@@ -48,8 +41,12 @@ class Dialogue:
             running = ""
         return lines
 
+    def create_text_sprites(self, lines):
+        print()
 
 d = Dialogue()
-d.setup(0, 300, 600, 300, gamebox.Camera(600, 600))
-d.get_dialogue(d.calc_lines(
-    "hello there my dear good friend who needs a shower because you seriously need one my god do you smell"))
+d.setup(0, 300, 600, 100, )
+lyns = d.calc_lines(
+    "hello there my dear good friend who needs a shower because you seriously need one my god do you smell")
+print(lyns)
+print(d.get_max_height(lyns))
