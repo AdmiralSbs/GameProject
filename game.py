@@ -19,16 +19,19 @@ Two Players Simultaneously - As described above
 
 """
 scale = 50
+camera = gamebox.Camera(400, 400)
 stuff = {
     "0": None,
-    "1": gamebox.from_color(0, 0, "red", scale, scale),
+    "1": gamebox.from_image(0, 0, "images\\shrub.png"),
     "2": gamebox.from_color(0, 0, "blue", scale, scale),
     "3": gamebox.from_color(0, 0, "blue", scale, scale),
     "4": gamebox.from_color(0, 0, "blue", scale, scale),
 }
+stuff["1"].width = scale / 2
+
 tags = [
     [],
-    [],
+    ["shrub"],
     ["wall"],
     ["wall", "platform"],
     ["wall", "ground"]
@@ -61,9 +64,17 @@ locations = [
 locations2 = smartbox.create_list_from_excel("maps\\map1.csv")
 
 walls = smartbox.create_map_from_list(locations2, stuff, scale, scale)
+shrubs = []
+for wall in walls:
+    if "shrub" in wall.tags:
+        shrubs.append(wall)
+
+for shrub in shrubs:
+    walls.remove(shrub)
+
 max_width = len(locations2) * scale
 max_height = smartbox.max_size(locations2) * scale
-camera = gamebox.Camera(max_width, max_height)
+# camera = gamebox.Camera(max_width, max_height)
 player = gamebox.from_color(100, 100, "yellow", 10, 10)
 
 
@@ -90,6 +101,8 @@ def tick(keys):
     camera.clear("green")
     for wall in walls:
         smartbox.draw_object(wall, camera)
+    for shrub in shrubs:
+        smartbox.draw_object(shrub, camera)
     smartbox.draw_object(player, camera)
     camera.display()
 

@@ -44,17 +44,18 @@ def create_map_from_list(locations, dicty, xscale, yscale):
     for column in range(len(locations)):
         for row in range((len(locations[column]))):
             iden = locations[column][row]
-            if iden not in dicty.keys():
-                raise Exception("Locations contained key ", str(iden), "not in dict")
-            if isinstance(dicty[iden], gamebox.SpriteBox):
-                created.append(dicty[iden].copy_at((column + 0.5) * xscale, (row + 0.5) * yscale))
-                created[-1].tags = dicty[iden].tags
+            for i in iden.split("|"):
+                if i not in dicty.keys():
+                    raise Exception("Locations contained key ", str(i), "not in dict")
+                if isinstance(dicty[i], gamebox.SpriteBox):
+                    created.append(dicty[i].copy_at((column + 0.5) * xscale, (row + 0.5) * yscale))
+                    created[-1].tags = dicty[i].tags
 
     return created
 
 
 def create_list_from_excel(file):
-    """Given an excel file that holds the numbers as they will appear
+    """Given a csv file that holds the numbers as they will appear
     Reads in the information, transposes as required and returns
     a properly formatted list of lists
 
