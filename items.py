@@ -34,3 +34,8 @@ styles = ["weapon", "potion", "ability"]
 names = ['Sean', 'Alexander']
 upsorn_moves = ['Piazza Ask', 'Live Code', 'Teach Lecture', 'Wholesome Email']
 enemy_moves = ['Vague Answer', 'People\'s United', 'PA Reject', 'LAB DESTROY']
+
+for_loop = Item("FOR_LOOP", 'item', '1', None,)
+while_loop = Item('WHILE_LOOP', 'item', '2', None,)
+dictionary = Item('DICT', 'item', '3', None,)
+list = Item('LIST', 'item', '4', None)
