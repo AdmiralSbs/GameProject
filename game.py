@@ -4,6 +4,10 @@ import gamebox
 import smartbox
 
 """
+The TAs have rebelled! They are strongly unstatisfied with their mediocre pay and lack of college credit! They DEMAND
+reform and so have attempted to...dun dun da..UNIONIZE! You, the fearless capitalist, cannot allow this to happen. But
+EGADS, the TAs, under the leadership of the dreaded TA Alexander, have kidnapped Princess Upsorn and trapped her in 
+the buggy SIS page! It is your job to complete the PAs, defeat the TAs, and save Princess Upsorn! 
 
 
 
@@ -21,7 +25,7 @@ stuff = {
     "0": None,
     "1": gamebox.from_image(0, 0, "images\\shrub.png"),
     "2": gamebox.from_color(0, 0, "blue", scale, scale),
-    "3": gamebox.from_color(0, 0, "blue", scale, scale),
+    "3": gamebox.from_color(0, 0, "red", scale, scale),
     "4": gamebox.from_color(0, 0, "blue", scale, scale),
     "5": gamebox.from_image(0, 0, "images\\mountain.png")
 }
