@@ -5,12 +5,15 @@ class Item:
         self.name = name
         self.style = style
         self.weight = weight
-class Enemy:
-    def __init__(self, name, power, move_list):
+class Player:
+    def __init__(self, name, move_list):
         self.name = name
         self.power = power
-        self.move = move
+        self.move = move_list
+
 
 
 styles = ["weapon", "potion", "ability"]
 names = ['Sean', 'Alexander']
+upsorn_moves = ['Piazza Ask','Live Code','Teach Lecture','Wholesome Email']
+enemy_moves = ['Vague Answer', 'People\'s United', 'PA Reject', 'LAB DESTROY']
