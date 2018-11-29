@@ -25,10 +25,24 @@ stuff = {
     "4": gamebox.from_color(0, 0, "blue", scale, scale),
     "5": gamebox.from_image(0, 0, "images\\mountain.png")
 }
+stuff2 = {
+    "0": None,
+    "1": gamebox.from_color(0, 0, "blue", scale, scale),
+    "2": gamebox.from_color(0, 0, "cyan", scale, scale),
+    "3": gamebox.from_color(0, 0, "darkblue", scale, scale),
+}
 stuff["1"].width = scale / 2
 stuff["5"].width = scale / 2
 
 tags = [
+    [],
+    ["shrub"],
+    ["wall"],
+    ["wall", "platform"],
+    ["wall", "ground"],
+    ["mountain"],
+]
+tags2 = [
     [],
     ["shrub"],
     ["wall"],
