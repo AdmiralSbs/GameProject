@@ -10,3 +10,19 @@ So you want to mess around with it:
     Create or edit the map file
     Edit the dictionary
     Should work just fine
+
+
+
+0) greeting
+1) averages
+2) higher_lower_player
+3) str_redux
+4) lou's list
+5) regex
+
+BASIC CODE
+FUNCTIONS
+LOOPS
+DATA STRUCTURES (LIST/DICT)
+READ FILE/INTERNET
+REGEX
