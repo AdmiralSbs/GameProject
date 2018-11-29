@@ -132,6 +132,9 @@ def tick(keys):
             if player.touches(item):
                 item.tags.remove("pick_up")
                 items.inventory.append(item)
+        if 'enemy' in item.tags:
+            if player.touches(item):
+                player.move_to_stop_overlapping(item)
     print(items.inventory)
 
 
