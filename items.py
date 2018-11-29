@@ -28,6 +28,6 @@ while_loop = Item('WHILE_LOOP', 'item', '2', gamebox.from_text(0, 0, "WHILE", 12
 dictionary = Item('DICT', 'item', '3', gamebox.from_text(0, 0, "DICT", 12, "lightblue", bold=True, italic=False))
 list = Item('LIST', 'item', '4', gamebox.from_text(0, 0, "LIST", 12, "gray", bold=True, italic=False))
 
-enemy1 = Player('Bob', enemy_moves, '5', gamebox.from_color(0,0,'red',50,50),None)
+enemy1 = Player('Bob', enemy_moves, gamebox.from_color(0,0,'red',10,10),None)
 
 inventory =[]

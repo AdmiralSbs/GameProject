@@ -62,7 +62,7 @@ tags2 = [
     ["pick_up"],
     ["pick_up"],
     ["pick_up"],
-    ['enemy'],
+    ['enemy', 'pick_up'],
 ]
 
 smartbox.add_tags_to_dict(stuff, tags)
@@ -128,7 +128,7 @@ def tick(keys):
             if player.touches(wall):
                 player.move_to_stop_overlapping(wall)
     for item in items1:
-        if "pick_up" in item.tags:
+        if "pick_up" in item.tags and 'enemy' not in item.tags:
             if player.touches(item):
                 item.tags.remove("pick_up")
                 items.inventory.append(item)
