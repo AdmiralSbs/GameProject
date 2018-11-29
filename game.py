@@ -4,10 +4,7 @@ import gamebox
 import smartbox
 
 """
-We are making a mini version of "Smash Bros", which will be a two player PVP game.
-Each player will control a character who will use ranged attacks to lower the health of their opponent.
-The map will include platforms and such
-Relevant physics will be present
+
 
 
 Optional Features:
@@ -26,15 +23,18 @@ stuff = {
     "2": gamebox.from_color(0, 0, "blue", scale, scale),
     "3": gamebox.from_color(0, 0, "blue", scale, scale),
     "4": gamebox.from_color(0, 0, "blue", scale, scale),
+    "5": gamebox.from_image(0, 0, "images\\mountain.png")
 }
 stuff["1"].width = scale / 2
+stuff["5"].width = scale / 2
 
 tags = [
     [],
     ["shrub"],
     ["wall"],
     ["wall", "platform"],
-    ["wall", "ground"]
+    ["wall", "ground"],
+    ["mountain"],
 ]
 
 for i in range(len(tags)):
