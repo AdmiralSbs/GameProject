@@ -26,3 +26,28 @@ LOOPS
 DATA STRUCTURES (LIST/DICT)
 READ FILE/INTERNET
 REGEX
+
+Basic Storyline:
+
+Upsorn (Player) trapped in Archimedes Server
+    Archimedes Server:
+        Piazza:
+        CS 1110:
+    Gains Tools and Potions to help
+        Tools: For Loops, While Loops, Dicts, Lists
+        Potions: Piazza Answers
+
+Moves:
+    Upsorn's Moves:
+        Ask Question on Piazza
+        Live Coding Session
+        Show Up to Lecture
+        Send a wholesome email
+    TA's Moves:
+        Give Vague Answer to Piazza Question
+        WE ARE PEOPLE TOO
+        Bogus PA Test Case
+        Make In-Class Lab Harder at 3:12pm
+
+
+
