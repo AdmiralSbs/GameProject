@@ -5,4 +5,6 @@ class Item:
         self.name = name
         self.style = style
         self.weight = weight
-   
+
+
+styles = ["weapon", "potion", "ability"]
