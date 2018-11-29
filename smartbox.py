@@ -89,3 +89,9 @@ def create_list_from_excel(file):
     # print(lines)
     # print(final_lines)
     return final_lines
+
+
+def add_tags_to_dict(stuff, tags):
+    for i in range(len(tags)):
+        if stuff[list(stuff.keys())[i]] != None:
+            stuff[list(stuff.keys())[i]].tags = tags[i]

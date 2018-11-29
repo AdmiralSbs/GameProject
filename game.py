@@ -48,16 +48,13 @@ tags = [
 ]
 tags2 = [
     [],
-    ["shrub"],
     ["wall"],
-    ["wall", "platform"],
-    ["wall", "ground"],
-    ["mountain"],
+    [],
+    [],
 ]
 
-for i in range(len(tags)):
-    if stuff[list(stuff.keys())[i]] != None:
-        stuff[list(stuff.keys())[i]].tags = tags[i]
+smartbox.add_tags_to_dict(stuff, tags)
+smartbox.add_tags_to_dict(stuff2, tags2)
 """
 A sample of what a map could look like (made in program)
 locations = [
@@ -79,9 +76,9 @@ locations = [
 ]
 """
 
-locations2 = smartbox.create_list_from_excel("maps\\map1.csv")
+locations2 = smartbox.create_list_from_excel("maps\\map2.csv")
 
-walls = smartbox.create_map_from_list(locations2, stuff, scale, scale)
+walls = smartbox.create_map_from_list(locations2, stuff2, scale, scale)
 shrubs = []
 for wall in walls:
     if "shrub" in wall.tags:
