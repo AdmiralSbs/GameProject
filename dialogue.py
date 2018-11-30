@@ -4,19 +4,17 @@ import pygame
 
 
 class Dialogue:
-    exists = False
     buffer = 5
-    font_size = 36
 
-    def setup(self, x, y, w, h, fs):
-        if Dialogue.exists:
-            raise Exception("You can only have one Dialogue at a time!")
-        self.background = gamebox.from_color(x + w / 2, y + h / 2, "white", w, h)
+    def setup(self, h, fs, camera):
+        self.background = gamebox.from_color(0, 0, "white", camera.width, h)
+        self.background.left = camera.left
+        self.background.bottom = camera.bottom
         exists = True
-        Dialogue.fs = fs
+        self.font_size = fs
 
     def get_max_height(self, lines):
-        height = max([gamebox.from_text(0, 0, line, Dialogue.font_size, "white").height for line in lines])
+        height = max([gamebox.from_text(0, 0, line, self.font_size, "white").height for line in lines])
         available = self.background.height - Dialogue.buffer * 2
         return max(available - Dialogue.buffer // height, 1)
 
@@ -28,7 +26,7 @@ class Dialogue:
             # print(len(words))
             while True:
                 running = (running + " " + words[0]).strip()
-                width = gamebox.from_text(0, 0, running, Dialogue.font_size, "white").width
+                width = gamebox.from_text(0, 0, running, self.font_size, "white").width
                 if width > int(self.background.width) - int(Dialogue.buffer) * 2:
                     l = len(words[0])
                     running = running[0:len(running) - l - 1]
@@ -39,25 +37,33 @@ class Dialogue:
                     break
             lines.append(running)
             running = ""
+        # print(lines)
         return lines
 
     def create_text_sprites(self, lines):
-        height = max([gamebox.from_text(0, 0, line, Dialogue.font_size, "white").height for line in lines])
+        height = max([gamebox.from_text(0, 0, line, self.font_size, "white").height for line in lines])
         things = []
         for i in range(len(lines)):
             x = self.background.left
-            print(x)
+            # print(x)
             y = self.background.top
-            g = gamebox.from_text(0, 0, lines[i], Dialogue.font_size, "black")
-            g.x = x + Dialogue.buffer - g.width / 2
-            print(g.x)
-            # g.y = y + i * (height + Dialogue.buffer) - g.height/2
+            g = gamebox.from_text(0, 0, lines[i], self.font_size, "black")
+            g.x = x + Dialogue.buffer + g.width / 2
+            # print(g.x)
+            g.y = y + i * (height + Dialogue.buffer) + g.height / 2
+            # print(g.y)
             things.append(g)
         return things
 
-d = Dialogue()
-d.setup(0, 300, 600, 100, 36)
-lyns = d.calc_lines(
-    "hello there my dear good friend who needs a shower because you seriously need one my god do you smell")
-print(lyns)
-print(d.get_max_height(lyns))
+    def update_loc(self, camera, things):
+        a = self.background.left
+        self.background.left = camera.left
+        a -= self.background.left
+        a *= -1
+
+        b = self.background.bottom
+        self.background.bottom = camera.bottom
+        b -= self.background.bottom
+        b *= -1
+
+        return (a, b)

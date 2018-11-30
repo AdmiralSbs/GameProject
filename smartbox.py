@@ -11,6 +11,14 @@ def max_size(listy):
     return max([len(x) for x in listy])
 
 
+def move_extras(copy, og):
+    big_keys = list(og.__dict__.keys())
+    reg = ['x', 'y', 'speedx', 'speedy', '_key', '_image', '_color', '_w', '_h']
+    for r in reg:
+        big_keys.remove(r)
+    for b in big_keys:
+        copy.__dict__[b] = og.__dict__[b]
+
 def draw_object(sprite, camera):
     """Given a SpriteBox and Camera, determine whether the sprite is on screen (they are overlapping)
     :param sprite:  A SpriteBox object as defined by gamebox
@@ -50,6 +58,7 @@ def create_map_from_list(locations, dicty, xscale, yscale):
                 if isinstance(dicty[i], gamebox.SpriteBox):
                     created.append(dicty[i].copy_at((column + 0.5) * xscale, (row + 0.5) * yscale))
                     created[-1].tags = dicty[i].tags
+                    move_extras(created[-1], dicty[i])
 
     return created
 
