@@ -11,7 +11,7 @@ class Dialogue:
     def setup(self, x, y, w, h, fs):
         if Dialogue.exists:
             raise Exception("You can only have one Dialogue at a time!")
-        self.background = gamebox.from_color(x, y, "white", w, h)
+        self.background = gamebox.from_color(x + w / 2, y + h / 2, "white", w, h)
         exists = True
         Dialogue.fs = fs
 
@@ -45,11 +45,14 @@ class Dialogue:
         height = max([gamebox.from_text(0, 0, line, Dialogue.font_size, "white").height for line in lines])
         things = []
         for i in range(len(lines)):
-            x = self.background.x
-            y = self.background.y
-            things.append(
-                gamebox.from_text(x + Dialogue.buffer, y + i * (height + Dialogue.buffer), lines[i], Dialogue.font_size,
-                                  "black"))
+            x = self.background.left
+            print(x)
+            y = self.background.top
+            g = gamebox.from_text(0, 0, lines[i], Dialogue.font_size, "black")
+            g.x = x + Dialogue.buffer - g.width / 2
+            print(g.x)
+            # g.y = y + i * (height + Dialogue.buffer) - g.height/2
+            things.append(g)
         return things
 
 d = Dialogue()

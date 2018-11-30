@@ -3,7 +3,7 @@ import pygame
 import gamebox
 import smartbox
 import items
-import dialogue
+from dialogue import Dialogue
 
 is_ready = False
 
@@ -16,24 +16,16 @@ the buggy SIS page! It is your job to complete the PAs, defeat the TAs, and save
 
 
 Optional Features:
-Animation - characters will have various sprite states
+
 Scrolling level - camera will be zoomed in on map based on distance between players
 Collectibles - Power ups can spawn that will affect gameplay
-Two Players Simultaneously - As described above
-
+Health Bar - Shows up in battles
+Intersession Progress - It'll autosave your stuff for later
 
 """
 scale = 50
 camera = gamebox.Camera(400, 400)
-stuff = {
-    "0": None,
-    "1": gamebox.from_image(0, 0, "images\\shrub.png"),
-    "2": gamebox.from_color(0, 0, "blue", scale, scale),
-    "3": gamebox.from_color(0, 0, "red", scale, scale),
-    "4": gamebox.from_color(0, 0, "blue", scale, scale),
-    "5": gamebox.from_image(0, 0, "images\\mountain.png"),
 
-}
 stuff2 = {
     "0": None,
     "1": gamebox.from_color(0, 0, "blue", scale, scale),
@@ -45,17 +37,7 @@ stuff2 = {
     "7": items.list.object,
     '8': items.enemy1.object,
 }
-stuff["1"].width = scale / 2
-stuff["5"].width = scale / 2
 
-tags = [
-    [],
-    ["shrub"],
-    ["wall"],
-    ["wall", "platform"],
-    ["wall", "ground"],
-    ["mountain"],
-]
 tags2 = [
     [],
     ["wall"],
@@ -68,30 +50,11 @@ tags2 = [
     ['enemy', 'pick_up'],
 ]
 
-smartbox.add_tags_to_dict(stuff, tags)
 smartbox.add_tags_to_dict(stuff2, tags2)
-"""
-A sample of what a map could look like (made in program)
-locations = [
-    [2] * 10,
-    [2, 0, 0, 0, 0, 0, 0, 0, 0, 4],
-    [2, 0, 3, 0, 3, 0, 1, 3, 0, 4],
-    [2, 0, 3, 0, 3, 0, 1, 3, 0, 4],
-    [2, 0, 0, 0, 0, 0, 0, 0, 0, 4],
-    [2, 0, 0, 0, 0, 0, 0, 0, 0, 4],
-    [2, 0, 0, 0, 0, 0, 0, 0, 0, 4],
-    [2, 0, 0, 0, 0, 0, 0, 0, 0, 4],
-    [2, 0, 0, 0, 0, 0, 0, 0, 0, 4],
-    [2, 0, 0, 0, 0, 0, 0, 0, 0, 4],
-    [2, 0, 0, 0, 0, 0, 0, 0, 0, 4],
-    [2, 0, 0, 0, 0, 0, 0, 0, 0, 4],
-    [2, 0, 0, 0, 0, 0, 0, 0, 0, 4],
-    [2, 0, 0, 0, 0, 0, 0, 0, 0, 4],
-    [2] * 10,
-]
-"""
+
 
 locations2 = smartbox.create_list_from_excel("maps\\map2.csv")
+
 
 walls = smartbox.create_map_from_list(locations2, stuff2, scale, scale)
 shrubs = []
@@ -112,6 +75,16 @@ max_height = smartbox.max_size(locations2) * scale
 # camera = gamebox.Camera(max_width, max_height)
 player = gamebox.from_color(100, 100, "yellow", 10, 10)
 
+d = Dialogue()
+d.setup(0, 300, 400, 100, 36)
+cool_lines = [
+    d.calc_lines("You picked up the LIST ability"),
+    d.calc_lines("You picked up the DICT ability"),
+]
+cool_boxes = [
+    d.create_text_sprites(cool_lines[0]),
+    d.create_text_sprites(cool_lines[1])
+]
 
 def tick(keys):
     global count
@@ -123,14 +96,6 @@ def tick(keys):
         player.move(0, -5)
     if pygame.K_s in keys:
         player.move(0, 5)
-    if pygame.K_SPACE in keys:
-        is_ready = True
-        if is_ready:
-            print()
-            #Write Code Here
-    else:
-        is_ready = False
-
 
     # player.move_speed()
 
@@ -162,6 +127,12 @@ def tick(keys):
         if "pick_up" in item.tags:
             smartbox.draw_object(item, camera)
     smartbox.draw_object(player, camera)
+
+    if pygame.K_SPACE in keys:
+        for thing in cool_boxes[0]:
+            smartbox.draw_object(d.background, camera)
+            smartbox.draw_object(thing, camera)
+
     camera.display()
 
 
