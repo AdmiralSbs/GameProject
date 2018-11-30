@@ -8,19 +8,20 @@ from dialogue import Dialogue
 is_ready = False
 
 """
+
 The TAs have rebelled! They are strongly unstatisfied with their mediocre pay and lack of college credit! They DEMAND
 reform and so have attempted to...dun dun da..UNIONIZE! You, the fearless capitalist, cannot allow this to happen. But
 EGADS, the TAs, under the leadership of the dreaded TA Alexander, have kidnapped Princess Upsorn and trapped her in 
-the buggy SIS page! It is your job to complete the PAs, defeat the TAs, and save Princess Upsorn! 
+the Archimedes Server! It is your job to complete the PAs and defeat TAs! 
 
-
+Players will move around a 2d map, collect items, and engage in pokemon style combat with enemies. They will have to 
+defeat a final boss. 
 
 Optional Features:
-
+Save Points
 Scrolling level - camera will be zoomed in on map based on distance between players
 Collectibles - Power ups can spawn that will affect gameplay
-Health Bar - Shows up in battles
-Intersession Progress - It'll autosave your stuff for later
+Intersession Progress - Players will be able to keep items on quit.
 
 """
 scale = 50
