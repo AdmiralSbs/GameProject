@@ -126,6 +126,7 @@ def tick(keys):
     if pygame.K_SPACE in keys:
         is_ready = True
         if is_ready:
+            print()
             #Write Code Here
     else:
         is_ready = False
