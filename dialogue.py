@@ -18,7 +18,7 @@ class Dialogue:
     def get_max_height(self, lines):
         height = max([gamebox.from_text(0, 0, line, Dialogue.font_size, "white").height for line in lines])
         available = self.background.height - Dialogue.buffer * 2
-        return max(available // height, 1)
+        return max(available - Dialogue.buffer // height, 1)
 
     def calc_lines(self, text):
         lines = []
@@ -42,10 +42,18 @@ class Dialogue:
         return lines
 
     def create_text_sprites(self, lines):
-        print()
+        height = max([gamebox.from_text(0, 0, line, Dialogue.font_size, "white").height for line in lines])
+        things = []
+        for i in range(len(lines)):
+            x = self.background.x
+            y = self.background.y
+            things.append(
+                gamebox.from_text(x + Dialogue.buffer, y + i * (height + Dialogue.buffer), lines[i], Dialogue.font_size,
+                                  "black"))
+        return things
 
 d = Dialogue()
-d.setup(0, 300, 600, 100, )
+d.setup(0, 300, 600, 100, 36)
 lyns = d.calc_lines(
     "hello there my dear good friend who needs a shower because you seriously need one my god do you smell")
 print(lyns)
