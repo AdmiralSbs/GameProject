@@ -18,7 +18,7 @@ def make_player(self, name, move_list, inventory, health):
 
 styles = ["weapon", "potion", "ability"]
 names = ['Sean', 'Alexander']
-upsorn_moves = ['Piazza Ask', 'Watch Live Code', 'Attend Lecture', 'Wholesome Email']
+upsorn_moves = ['Ask Question on Piazza', 'Watch Live Code', 'Attend Lecture', 'Wholesome Email']
 enemy_moves = ['Vague Answer', 'We\'re people too', 'PA Reject', 'LAB DESTROY']
 
 for_loop = gamebox.from_text(0, 0, "FOR", 12, "yellow", bold=True, italic=False)

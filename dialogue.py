@@ -10,7 +10,6 @@ class Dialogue:
         self.background = gamebox.from_color(0, 0, "white", camera.width, h)
         self.background.left = camera.left
         self.background.bottom = camera.bottom
-        exists = True
         self.font_size = fs
 
     def get_max_height(self, lines):

@@ -10,8 +10,8 @@ is_ready = False
 info = """
 The TAs have rebelled! They are strongly unstatisfied with their mediocre pay and lack of college credit! They DEMAND
 reform and so have attempted to...dun dun da..UNIONIZE! You, the fearless capitalist, cannot allow this to happen. But
-EGADS, the TAs, under the leadership of the dreaded TA Alexander, have kidnapped Professor Upsorn and trapped her in 
-the Archimedes Server! It is your job to complete the PAs and defeat TAs! (notice the rhyme?)
+OH NO, the TAs, under the leadership of the dreaded TA Alexander, have kidnapped Professor Upsorn and trapped her in 
+the Archimedes Server, trapped under her own assignments! It is your job to help her complete the PAs and defeat TAs!
 
 It's basically Pokemon.
 
@@ -22,8 +22,6 @@ The maps are not too large, and link to each other
 
 The PA's are some of our "favorites" that will basically be like strength boulders, rock smash rocks, etc., with specific
 skills relating to the class serving like HMs that allow you to further progress in the game.
-
-
 
 Optional Features:
 Health Bar - Will be present during battle. A loss requires reloading a previous save (DOOM style) (nyi)
@@ -72,10 +70,10 @@ player = None
 
 for wall in walls:
     if "top" in wall.tags:
-        print("hey")
+        # print("hey")
         items1.append(wall)
     if "player" in wall.tags:
-        print("found")
+        # print("found")
         player = wall
 
 for item in items1:
@@ -128,7 +126,7 @@ def start_screen(keys):
 def tick(keys):
     global timer, timer_end, disp_pause, box, enemy
     timer += 0
-
+    # print(disp_pause)
     if not disp_pause:
         if pygame.K_a in keys:
             player.move(-5, 0)
@@ -139,6 +137,7 @@ def tick(keys):
         if pygame.K_s in keys:
             player.move(0, 5)
     if pygame.K_SPACE in keys:
+        keys.remove(pygame.K_SPACE)
         if box == 1 or box == 0:
             disp_pause = False
         elif box == 2:
@@ -147,6 +146,7 @@ def tick(keys):
             items1.remove(enemy)
             disp_pause = False
 
+
     for wall in walls:
         if "wall" in wall.tags:
             if player.touches(wall):
@@ -154,8 +154,9 @@ def tick(keys):
     for item in items1:
         if "pick_up" in item.tags and 'enemy' not in item.tags:
             if player.touches(item):
-                item.tags.remove("pick_up")
-                items.inventory.append(item)
+                items1.remove(item)
+                print(item.tags)
+                player.inventory.append(item)
                 disp_pause = True
                 vals = {
                     "LIST": 0,
@@ -185,8 +186,7 @@ def tick(keys):
     for wall in walls:
         smartbox.draw_object(wall, camera)
     for item in items1:
-        if "pick_up" or "enemy" in item.tags:
-            smartbox.draw_object(item, camera)
+        smartbox.draw_object(item, camera)
 
     smartbox.draw_object(player, camera)
 
@@ -206,7 +206,7 @@ cool_lines2 = None
 
 
 def battle_prep(player, enemy):
-    d.setup(100, 36, camera)
+    d.setup(200, 36, camera)
     global cool_lines2
     cool_lines2 = [
         d.calc_lines("Upsorn is challenged by TA grunt!"),
@@ -218,25 +218,28 @@ def battle_prep(player, enemy):
         d.calc_lines("Upsorn used " + player.move_list[3] + " , TA remembers why they chose Upsorn"),
         d.calc_lines("Enemy used " + enemy.move_list[0] + " , but Upsorn won't understand until she's wiser"),
         d.calc_lines(
-            "Enemy used " + enemy.move_list[1] + " , Upsorn exhibits increased sympathy (which is hard for her)"),
-        d.calc_lines("Enemy used " + enemy.move_list[2] + " , Upsorn doesn't know why"),
-        d.calc_lines("Enemy used " + enemy.move_list[3] + " , Upsorn missed the bus!"),
+            "Enemy used " + enemy.move_list[1] + " , but Upsorn's sympathy was already at max"),
+        d.calc_lines("Enemy used " + enemy.move_list[2] + " , Upsorn doesn't know what's wrong with her code"),
+        d.calc_lines("Enemy used " + enemy.move_list[3] + " , Upsorn missed the bus trying to finish!"),
         d.calc_lines("Enemy couldn't handle the lack of mechanics in this part and faints!")
     ]
-    # player.scale_by(10)
-    # enemy.scale_by(10)
-    # coords = [[player.x, player.y], [enemy.x, enemy.y]]
-    # player.x = 100
-    # player.y = 100
-    # enemy.x = 300
-    # enemy.y = 100
+    player.scale_by(10)
+    enemy.scale_by(10)
+    coords = [[player.x, player.y], [enemy.x, enemy.y]]
+    player.x = 100 + camera.left
+    player.y = 100 + camera.top
+    enemy.x = 300 + camera.left
+    enemy.y = 100 + camera.top
     gamebox.timer_loop(30, battle)
-    # player.scale_by(0.1)
-    # enemy.scale_by(0.1)
-    # player.x = coords[0][0]
-    # player.y = coords[0][1]
-    # enemy.x = coords[1][0]
-    # enemy.y = coords[1][1]
+    player.scale_by(0.1)
+    enemy.scale_by(0.1)
+    player.x = coords[0][0]
+    player.y = coords[0][1]
+    enemy.x = coords[1][0]
+    enemy.y = coords[1][1]
+    d.setup(100, 36, camera)
+    gamebox._timeron = True
+    gamebox.unpause()
 
 
 stage = "declare"
@@ -263,7 +266,8 @@ def battle(keys):
     if pygame.K_SPACE in keys:
         keys.clear()
         if box2 in [0, 6, 7, 8, 9]:
-            if sum(choices):
+            if sum(choices) == 10:
+                # print(choices)
                 box2 = 10
             else:
                 box2 = 1
@@ -272,12 +276,13 @@ def battle(keys):
         elif box2 == 10:
             gamebox.stop_loop()
     camera.clear("black")
-    camera.draw(gamebox.from_text(50, 50, "hi", 36, "yellow"))
-    smartbox.draw_object(gamebox.from_color(100, 100, "yellow", 100, 100), camera)
-    smartbox.draw_object(gamebox.from_color(300, 100, "red", 100, 100), camera)
+
     smartbox.draw_object(d.background, camera)
     for thing in d.create_text_sprites(cool_lines2[box2]):
         smartbox.draw_object(thing, camera)
+    # camera.draw(gamebox.from_text(50, 50, "hi", 36, "yellow"))
+    smartbox.draw_object(player, camera)
+    smartbox.draw_object(enemy, camera)
     camera.display()
 
 
