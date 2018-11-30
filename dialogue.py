@@ -45,7 +45,7 @@ class Dialogue:
         print()
 
 d = Dialogue()
-d.setup(0, 300, 600, 100, )
+d.setup(0, 300, 600, 100, 36)
 lyns = d.calc_lines(
     "hello there my dear good friend who needs a shower because you seriously need one my god do you smell")
 print(lyns)

@@ -3,6 +3,9 @@ import pygame
 import gamebox
 import smartbox
 import items
+import dialogue
+
+is_ready = False
 
 """
 The TAs have rebelled! They are strongly unstatisfied with their mediocre pay and lack of college credit! They DEMAND
@@ -120,6 +123,13 @@ def tick(keys):
         player.move(0, -5)
     if pygame.K_s in keys:
         player.move(0, 5)
+    if pygame.K_SPACE in keys:
+        is_ready = True
+        if is_ready:
+            #Write Code Here
+    else:
+        is_ready = False
+
 
     # player.move_speed()
 
@@ -135,7 +145,6 @@ def tick(keys):
         if 'enemy' in item.tags:
             if player.touches(item):
                 player.move_to_stop_overlapping(item)
-    print(items.inventory)
 
 
 
