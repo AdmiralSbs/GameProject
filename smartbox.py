@@ -225,7 +225,15 @@ class Dialogue:
 
     def how_much(self, lines):
         """A test method to determine how many lines would survive"""
-        return self.calc_lines(lines)[self.get_max_height(lines)]
+        q = self.calc_lines(lines)
+        things = self.create_text_sprites(q)
+        count = 0
+        for thing in things:
+            if thing.bottom < self.background.bottom:
+                count += 1
+        for thing in things:
+            self.pieces_of_text.remove(thing)
+        return q[0:count + 1]
 
 
 class Map:
