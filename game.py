@@ -20,8 +20,8 @@ defeat a final boss.
 
 The maps are not too large, and link to each other
 
-The PA's are some of our "favorites" that will basically be like strength boulders, rock smash rocks, etc., with specific
-skills relating to the class serving like HMs that allow you to further progress in the game.
+The PA's are some of our "favorites" that will basically be like strength boulders, rock smash rocks, etc., with
+specific skills relating to the class serving like HMs that allow you to further progress in the game.
 
 Optional Features:
 Health Bar - Will be present during battle. A loss requires reloading a previous save (DOOM style) (nyi)
@@ -41,7 +41,7 @@ stuff2 = {
     "4": items.for_loop,
     "5": items.while_loop,
     "6": items.dictionary,
-    "7": items.list,
+    "7": items.list_,
     '8': items.enemy1,
     '9': items.upsorn,
 }
@@ -82,7 +82,7 @@ for item in items1:
 max_width = len(locations2) * scale
 max_height = smartbox.max_size(locations2) * scale
 
-if player == None:
+if player is None:
     player = gamebox.from_color(100, 100, "green", 10, 10)
 
 d = Dialogue()
@@ -146,7 +146,6 @@ def tick(keys):
             items1.remove(enemy)
             disp_pause = False
 
-
     for wall in walls:
         if "wall" in wall.tags:
             if player.touches(wall):
@@ -176,7 +175,7 @@ def tick(keys):
     camera.x = min(max(player.x, camera.width / 2), max_width - camera.width / 2)
     camera.y = min(max(player.y, camera.height / 2), max_height - camera.height / 2)
 
-    a, b = d.update_loc(camera, cool_boxes)
+    a, b = d.update_loc(camera)
     for group in cool_boxes:
         for thing in group:
             thing.x += a
@@ -259,7 +258,7 @@ def battle(keys):
             box2 = 4
         elif pygame.K_4 in keys:
             box2 = 5
-        if (box2 - 1 not in choices):
+        if box2 - 1 not in choices:
             choices.append(box2 - 1)
         keys.clear()
 

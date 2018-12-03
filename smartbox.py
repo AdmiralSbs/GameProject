@@ -19,6 +19,7 @@ def move_extras(copy, og):
     for b in big_keys:
         copy.__dict__[b] = og.__dict__[b]
 
+
 def draw_object(sprite, camera):
     """Given a SpriteBox and Camera, determine whether the sprite is on screen (they are overlapping)
     :param sprite:  A SpriteBox object as defined by gamebox
@@ -88,9 +89,10 @@ def create_list_from_excel(file):
         final_lines.append([])
 
     for line in lines:
-        if line == [""]: continue
+        if line == [""]:
+            continue
         for spot in range(len(line)):
-            if (line[spot] != ""):
+            if line[spot] != "":
                 final_lines[spot].append(line[spot])
             else:
                 final_lines[spot].append("0")
@@ -102,5 +104,5 @@ def create_list_from_excel(file):
 
 def add_tags_to_dict(stuff, tags):
     for i in range(len(tags)):
-        if stuff[list(stuff.keys())[i]] != None:
+        if stuff[list(stuff.keys())[i]] is not None:  # if stuff[list(stuff.keys())[i]] != None
             stuff[list(stuff.keys())[i]].tags = tags[i]

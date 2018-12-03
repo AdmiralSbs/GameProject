@@ -1,6 +1,5 @@
 # Watkins, jmw4dx
 import gamebox
-import pygame
 
 
 class Dialogue:
@@ -21,18 +20,17 @@ class Dialogue:
         lines = []
         words = text.split()
         running = ""
-        while (len(words) > 0):
+        while len(words) > 0:
             # print(len(words))
             while True:
                 running = (running + " " + words[0]).strip()
                 width = gamebox.from_text(0, 0, running, self.font_size, "white").width
                 if width > int(self.background.width) - int(Dialogue.buffer) * 2:
-                    l = len(words[0])
-                    running = running[0:len(running) - l - 1]
+                    running = running[0:len(running) - len(words[0]) - 1]
                     break
                 words.pop(0)
                 # print(words)
-                if words == []:
+                if not words:  # words == []
                     break
             lines.append(running)
             running = ""
@@ -54,7 +52,7 @@ class Dialogue:
             things.append(g)
         return things
 
-    def update_loc(self, camera, things):
+    def update_loc(self, camera):
         a = self.background.left
         self.background.left = camera.left
         a -= self.background.left
@@ -65,4 +63,4 @@ class Dialogue:
         b -= self.background.bottom
         b *= -1
 
-        return (a, b)
+        return a, b

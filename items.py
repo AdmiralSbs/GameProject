@@ -1,6 +1,5 @@
 # Watkins, jmw4dx
 import gamebox
-import pygame
 
 
 def make_item(self, name, style, weight):
@@ -9,10 +8,10 @@ def make_item(self, name, style, weight):
     self.weight = weight
 
 
-def make_player(self, name, move_list, inventory, health):
+def make_player(self, name, move_list, inv, health):
     self.name = name
     self.move_list = move_list
-    self.inventory = inventory
+    self.inventory = inv
     self.health = health
 
 
@@ -27,8 +26,8 @@ while_loop = gamebox.from_text(0, 0, "WHILE", 12, "red", bold=True, italic=False
 make_item(while_loop, 'WHILE_LOOP', 'item', '2')
 dictionary = gamebox.from_text(0, 0, "DICT", 12, "lightblue", bold=True, italic=False)
 make_item(dictionary, 'DICT', 'item', '3')
-list = gamebox.from_text(0, 0, "LIST", 12, "gray", bold=True, italic=False)
-make_item(list, "LIST", 'item', '4')
+list_ = gamebox.from_text(0, 0, "LIST", 12, "gray", bold=True, italic=False)
+make_item(list_, "LIST", 'item', '4')
 
 # enemy1 = Player('Bob', enemy_moves, gamebox.from_color(0, 0, 'red', 10, 10), None, 50)
 enemy1 = gamebox.from_color(0, 0, 'red', 10, 10)
