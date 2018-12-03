@@ -29,46 +29,19 @@ Collectibles - Power ups can spawn that will affect gameplay (implemented)
 Intersession Progress - Game will autosave on quit, and allow for manual saves as well (nyi)
 """
 
-scale = 50
 camera = gamebox.Camera(400, 400)
 smartbox.camera = camera
 
 inventory = []
 
 data = FileMaster.read_objects("map2.csv")
+locations2 = FileMaster.read_locations(data["locations"])
+scale = int(data["scale"])
+stuff4 = FileMaster.read_stuff(data["stuff"], scale)
+tags3 = FileMaster.read_tags(data["tags"])
+smartbox.add_tags_to_dict(stuff4, tags3)
 
-stuff2 = {
-    "0": None,
-    "1": gamebox.from_color(0, 0, "blue", scale, scale),
-    "2": gamebox.from_color(0, 0, "cyan", scale, scale),
-    "3": gamebox.from_color(0, 0, "darkblue", scale, scale),
-    "4": Handler.for_loop,
-    "5": Handler.while_loop,
-    "6": Handler.dictionary,
-    "7": Handler.list_,
-    '8': Handler.enemy1,
-    '9': Handler.upsorn,
-}
-
-tags2 = [
-    [],
-    ["tile", "wall"],
-    ["tile"],
-    ["tile"],
-    ["pick_up", 'top'],
-    ["pick_up", 'top'],
-    ["pick_up", 'top'],
-    ["pick_up", 'top'],
-    ['enemy', 'top'],
-    ['player', 'top']
-]
-
-smartbox.add_tags_to_dict(stuff2, tags2)
-
-# locations2 = FileMaster.create_list_from_excel("maps\\map2.csv")
-locations2 = FileMaster.read_locations(data["locations"])  # Assumes locations
-
-walls = smartbox.create_map_from_list(locations2, stuff2, scale, scale)
+walls = smartbox.create_map_from_list(locations2, stuff4, scale, scale)
 items1 = []
 
 player = None
