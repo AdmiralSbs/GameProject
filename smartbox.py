@@ -1,6 +1,10 @@
 # Watkins, jmw4dx
 # Yes, I just did this
 import gamebox
+from pathlib import Path
+import re
+
+camera: gamebox.Camera = None
 
 
 def max_size(listy):
@@ -9,6 +13,15 @@ def max_size(listy):
     :return: Length of longest list
     """
     return max([len(x) for x in listy])
+
+
+def transpose(listy):
+    """Given a 2D list, transpose it
+    As written on https://www.geeksforgeeks.org/transpose-matrix-single-line-python/
+    :param listy: 2D list
+    :return: transposed list
+    """
+    return [[listy[j][i] for j in range(len(listy))] for i in range(len(listy[0]))]
 
 
 def move_extras(copy, og):
@@ -20,17 +33,16 @@ def move_extras(copy, og):
         copy.__dict__[b] = og.__dict__[b]
 
 
-def draw_object(sprite, camera):
-    """Given a SpriteBox and Camera, determine whether the sprite is on screen (they are overlapping)
+def draw_object(sprite):
+    """Given a SpriteBox (and assuming camera was set) determine whether the sprite is on screen (they are overlapping)
     :param sprite:  A SpriteBox object as defined by gamebox
-    :param camera:  A Camera object as defined by gamebox
     :return: None
     """
     # Custom errors to make me feel special
     if not isinstance(sprite, gamebox.SpriteBox):
         raise Exception("First parameter must be SpriteBox")
     if not isinstance(camera, gamebox.Camera):
-        raise Exception("Second parameter must be Camera")
+        raise Exception("Smartbox camera must be set")
 
     checks = [sprite.left < camera.right, sprite.right > camera.left,
               sprite.top < camera.bottom, sprite.bottom > camera.top]
@@ -64,45 +76,287 @@ def create_map_from_list(locations, dicty, xscale, yscale):
     return created
 
 
-def create_list_from_excel(file):
-    """Given a csv file that holds the numbers as they will appear
-    Reads in the information, transposes as required and returns
-    a properly formatted list of lists
+def make_item(self, name, style, weight):
+    self.name = name
+    self.style = style
+    self.weight = weight
 
-    Fle itself has data organized as it will appear on screen, this method transposes
-    that data into the style handled by the above function
 
-    :param file: File location
-    :return: List of lists for use in above method
-    """
-    # Get all the lines
-    with open(file) as excel:
-        parts = excel.read().split("\n")
-    lines = []
-    for i in range(len(parts)):
-        thing = parts[i].strip("ï»¿")
-        lines.append(thing.split(","))
-
-    # Transpose all the lines
-    final_lines = []
-    for x in range(len(lines[0])):
-        final_lines.append([])
-
-    for line in lines:
-        if line == [""]:
-            continue
-        for spot in range(len(line)):
-            if line[spot] != "":
-                final_lines[spot].append(line[spot])
-            else:
-                final_lines[spot].append("0")
-
-    # print(lines)
-    # print(final_lines)
-    return final_lines
+def make_entity(self, name, move_list, health):
+    self.name = name
+    self.move_list = move_list
+    self.health = health
 
 
 def add_tags_to_dict(stuff, tags):
     for i in range(len(tags)):
         if stuff[list(stuff.keys())[i]] is not None:  # if stuff[list(stuff.keys())[i]] != None
             stuff[list(stuff.keys())[i]].tags = tags[i]
+
+
+class Handler:
+    # Watkins, jmw4dx
+    import gamebox
+
+    styles = ["weapon", "potion", "ability"]
+    names = ['Sean', 'Alexander']
+    upsorn_moves = ['Ask Question on Piazza', 'Watch Live Code', 'Attend Lecture', 'Wholesome Email']
+    enemy_moves = ['Vague Answer', 'We\'re people too', 'PA Reject', 'LAB DESTROY']
+
+    for_loop = gamebox.from_text(0, 0, "FOR", 12, "yellow", bold=True, italic=False)
+    make_item(for_loop, "FOR_LOOP", 'item', '1')
+    while_loop = gamebox.from_text(0, 0, "WHILE", 12, "red", bold=True, italic=False)
+    make_item(while_loop, 'WHILE_LOOP', 'item', '2')
+    dictionary = gamebox.from_text(0, 0, "DICT", 12, "lightblue", bold=True, italic=False)
+    make_item(dictionary, 'DICT', 'item', '3')
+    list_ = gamebox.from_text(0, 0, "LIST", 12, "gray", bold=True, italic=False)
+    make_item(list_, "LIST", 'item', '4')
+
+    enemy1 = gamebox.from_color(0, 0, 'red', 10, 10)
+    make_entity(enemy1, 'Bob', enemy_moves, 50)
+    upsorn = gamebox.from_color(0, 0, 'yellow', 10, 10)
+    make_entity(upsorn, 'upsorn', upsorn_moves, 50)
+
+    all_items = {
+        "for_loop": for_loop,
+        "while_loop": while_loop,
+        "dictionary": dictionary,
+        "list_": list_,
+    }
+
+    all_entities = {
+        "enemy1": enemy1,
+        "upsorn": upsorn,
+    }
+
+    inventory = []
+
+
+class Dialogue:
+    """This class handles the display of text in a "dialogue box" format similar to pokemon
+    Given a string and a text size, it sorts it into rows that will fit on the screen
+    """
+    buffer = 5
+
+    def __init__(self, h, fs):
+        self.background = gamebox.from_color(0, 0, "white", camera.width, h)
+        self.background.left = camera.left
+        self.background.bottom = camera.bottom
+        self.font_size = fs
+        self.pieces_of_text = []
+
+    # def setup(self, h, fs, camera):
+    #     self.background = gamebox.from_color(0, 0, "white", camera.width, h)
+    #     self.background.left = camera.left
+    #     self.background.bottom = camera.bottom
+    #     self.font_size = fs
+    #     self.ready = True
+
+    def get_max_height(self, lines):
+        """Given a list of strings to create text from (hopefully) generated by the below method, determine how many
+        of them can fit inside the background given the buffer space
+
+        :param lines: List of strings
+        :return: How many can fit
+        """
+        height = max([gamebox.from_text(0, 0, line, self.font_size, "white").height for line in lines])
+        available = self.background.height - Dialogue.buffer * 2
+        return max(available - Dialogue.buffer // height, 1)
+
+    def calc_lines(self, text):
+        """Given the text, and assuming setup() has been called previously, figure out where the line should end,
+        delimited by space, and return the string split along those points
+
+        :param text: A string to be displayed
+        :return: List of strings from text split into lines delimited by where it would be too long for the screen
+        """
+        lines = []
+        words = text.split()
+        running = ""
+        while len(words) > 0:
+            while True:
+                running = (running + " " + words[0]).strip()
+                width = gamebox.from_text(0, 0, running, self.font_size, "white").width
+                if width > int(self.background.width) - int(Dialogue.buffer) * 2:
+                    running = running[0:len(running) - len(words[0]) - 1]
+                    break
+                words.pop(0)
+                if not words:  # words == []
+                    break
+            lines.append(running)
+            running = ""
+        return lines
+
+    def create_text_sprites(self, lines):
+        """Given lines (hopefully) created by the above method, return gamebox SpriteBoxes to be drawn
+
+        :param lines: List of strings
+        :return: Those strings as gameboxes
+        """
+        height = max([gamebox.from_text(0, 0, line, self.font_size, "white").height for line in lines])
+        things = []
+        for i in range(len(lines)):
+            x = self.background.left
+            # print(x)
+            y = self.background.top
+            g = gamebox.from_text(0, 0, lines[i], self.font_size, "black")
+            g.x = x + Dialogue.buffer + g.width / 2
+            # print(g.x)
+            g.y = y + i * (height + Dialogue.buffer) + g.height / 2
+            # print(g.y)
+            things.append(g)
+            self.pieces_of_text.append(g)
+        return things
+
+    def update_loc(self, manage_pieces=False):
+        a = self.background.left
+        self.background.left = camera.left
+        a -= self.background.left
+        a *= -1
+
+        b = self.background.bottom
+        self.background.bottom = camera.bottom
+        b -= self.background.bottom
+        b *= -1
+
+        if manage_pieces:
+            for piece in self.pieces_of_text:
+                piece.x += a
+                piece.y += b
+
+        return a, b
+
+
+class Map:
+    """It's got everything in one big package"""
+
+    def __init__(self, locations, stuff, tags, dialogue, text):
+        self.locations = locations
+        self.stuff = stuff
+        self.tags = tags
+        self.dialogue = dialogue
+        self.text = text
+
+
+class FileMaster:
+    """This baby's gonna read and write all them damn files so hard, you won't know what hit 'em"""
+
+    standard_headers = ["locations", "stuff", "tags", "dialogue", "text", "scale"]
+
+    @staticmethod
+    def num_or_scale(num, scale: int):
+        """
+        :param num: Either an integer or "scale"
+        :param scale: The value of the scale
+        :return: The integer or the value of scale
+        """
+        return scale if num == scale else int(num)
+
+    @staticmethod
+    def filelocation(file: str, folder: str):
+        """Given the file name, get its correct path string depending if folder exists
+
+        :param file: bare file name
+        :param folder: optional folder
+        :return: the best name for the file
+        """
+        file_check = re.compile(r"[\\/]?([\w]+[.][\w]+)$")
+        file = (file_check.search(file)).groups()[0]
+        if Path(folder).is_dir():
+            file = folder + "\\" + file
+        return file
+
+    @staticmethod
+    def file_to_string(file):
+        """Gets string from a csv file, stripping extra commas
+        Handles file location possibly not being in the maps folder
+
+        :param file: csv file assumed to be in maps (or in base directory if maps doesn't exist)
+        :return: string version of file
+        """
+        text = ""
+        file_type = re.compile(r"(map[\w]+[.]csv)$")
+        q = file_type.search(file).groups()[0]
+        if q is not None:
+            file = FileMaster.filelocation(file, "maps")
+            print(file)
+            try:
+                with open(file, 'r') as reader:
+                    for line in reader:
+                        text += line.replace("ï»¿", "").replace("\n", "").strip(",") + "\n"
+            except:
+                raise Exception("File not found in maps, or in base directory if maps doesn't exist")
+        else:
+            raise Exception("File not in correct csv format")
+
+        return text
+
+    @staticmethod
+    def read_objects(file: str):
+        """Assuming standard map format, reads map related pieces from map file and separates into manageable
+        chunks to be handled by further methods
+
+        :param file: File name (assumed to be in maps)
+        :return: Dict containing strings of objects in \n format
+        """
+        print(file)
+        text = FileMaster.file_to_string(file)
+        pieces = []
+        running = ""
+        for line in text.split("\n"):
+            if running == "":
+                if line.lower().replace(":", "").replace("-", "").strip() in FileMaster.standard_headers:
+                    running += line.lower().replace(":", "").replace("-", "").strip()
+            else:
+                if line.lower() == "end":
+                    pieces.append(running)
+                    running = ""
+                else:
+                    running += "\n" + line
+        dicty = {}
+        for piece in pieces:
+            key = piece[0:piece.find("\n")]
+            val = piece[piece.find("\n") + 1:]
+            dicty[key] = val
+        return dicty
+
+    @staticmethod
+    def read_locations(text):
+        """Given a string that holds the numbers as they will appear
+        Reads in the information, transposes as required and returns
+        a properly formatted list of lists
+
+        :param text: String with numbers in file format
+        :return: List of lists of numbers in data format
+        """
+        lines = []
+        for thing in text.split("\n"):
+            q = thing.split(",")
+            if q != [""]:
+                lines.append(q)
+        return transpose(lines)
+
+    @staticmethod
+    def read_stuff(text: str, scale: int):
+        """Given a string holding info for a stuff in file format, create a stuff dict
+
+        :param text: String holding info
+        :param scale: handles scale mentions
+        :return: dict
+        """
+        stuff = {}
+        for line in text.split("\n"):
+            pieces = line.split(",")
+            key = pieces[0]
+            val = None
+            if pieces[1].lower() == "item":
+                val = Handler.all_items[pieces[2]]
+            elif pieces[1].lower() == "entity":
+                val = Handler.all_items[pieces[2]]
+            elif pieces[1].lower() == "spritebox":
+                if pieces[2].lower() == "color":
+                    val = gamebox.from_color(0, 0, pieces[3], FileMaster.num_or_scale(pieces[4], scale),
+                                             FileMaster.num_or_scale(pieces[5], scale))
+                elif pieces[2].lower() in ["img", "image", "pic"]:
+                    val = gamebox.from_image(0, 0, FileMaster.filelocation(pieces[3], pieces[4]))
+            stuff[key] = val

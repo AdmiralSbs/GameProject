@@ -4,7 +4,6 @@
 import gamebox
 import pygame
 import smartbox
-import dialogue
 
 #
 # xscale = 50
@@ -47,5 +46,9 @@ import dialogue
 #
 #
 # gamebox.timer_loop(30, tick)
-d = dialogue.Dialogue()
-d.setup(100, 36, gamebox.Camera())
+
+smartbox.FileMaster.read_objects("map2.csv")
+print()
+# with open("maps\\map2.csv") as file:
+
+# while True:
