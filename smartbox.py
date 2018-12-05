@@ -132,7 +132,7 @@ class Handler:
     enemy1 = gamebox.from_color(0, 0, 'red', 10, 10)
     make_entity(enemy1, 'Bob', enemy_moves, 50)
     enemy2 = gamebox.from_color(0, 0, 'red', 30, 30)
-    make_entity(enemy1, 'Bob', enemy_moves, 50)
+    make_entity(enemy2, 'Bob', enemy_moves, 50)
     upsorn = gamebox.from_color(0, 0, 'yellow', 10, 10)
     make_entity(upsorn, 'upsorn', upsorn_moves, 50)
 
