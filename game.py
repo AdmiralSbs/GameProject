@@ -34,17 +34,6 @@ smartbox.camera = camera
 
 inventory = []
 
-# data = smartbox.read_objects("map2.csv")
-# #for key in data.keys():
-# #    print(key)
-# #    print(map2[key])
-# locations2 = smartbox.read_locations(map2["locations"])
-# scale = int(map2["scale"])
-# stuff4 = smartbox.read_stuff(map2["stuff"], scale)
-# tags3 = smartbox.read_tags(map2["tags"])
-# smartbox.add_tags_to_dict(stuff4, tags3)
-#
-# walls = smartbox.create_map_from_list(locations2, stuff4, scale, scale)
 map2: smartbox.Map = smartbox.read_map_objects("map2.csv")
 walls = map2.objects
 items1 = []
@@ -69,16 +58,6 @@ if player is None:
 d: Dialogue = map2.dialogue
 d2 = Dialogue(400, 36)
 d3 = Dialogue(200, 36)
-# cool_lines = [
-#     d.calc_lines("You picked up the LIST ability damn right you did boy"),
-#     d.calc_lines("You picked up the DICT ability"),
-#     d.calc_lines("I can't believe it!  You're still moving...  Prepare to perish!"),
-# ]
-# cool_boxes = [
-#     d.create_text_sprites(cool_lines[0]),
-#     d.create_text_sprites(cool_lines[1]),
-#     d.create_text_sprites(cool_lines[2]),
-#]
 cool_boxes = d.text_sprites_list(map2.text)
 
 disp_pause = False
@@ -86,7 +65,6 @@ timer_end = 0
 timer = 0
 box = "list_pu"
 enemy = None
-# print(list(map2.text.keys()))
 info2 = """Peep game.py and the readme.txt for some cool stuff. Use WASD to move around, and touch the red guy to start
 a fight.  Oooh, spooky.  WELCOME TO ESCAPE FROM ARCHIMEDES: ATTACK OF THE TA's AND THE PA's.  Oooh, aaah.  SPACE to
 get out of these text situations, 1-4 when appropriate. X-ing out the window enough times closes it.  Please hit up the
@@ -155,10 +133,6 @@ def tick(keys):
     camera.y = min(max(player.y, camera.height / 2), max_height - camera.height / 2)
 
     a, b = d.update_loc(camera)
-    # for group in cool_boxes:
-    #     for thing in group:
-    #         thing.x += a
-    #         thing.y += b
 
     camera.clear("green")
     for wall in walls:
@@ -182,21 +156,6 @@ cool_lines2 = None
 def battle_prep(player, enemy):
     global cool_lines2
     d3.update_loc()
-    '''cool_lines2_text = [
-        d3.calc_lines("Upsorn is challenged by TA grunt!"),
-        d3.calc_lines("1: " + player.move_list[0] + " 2: " + player.move_list[1] +
-                      " 3: " + player.move_list[2] + " 4: " + player.move_list[3] + " (try all 4 to \"win\")"),
-        d3.calc_lines("Upsorn used " + player.move_list[0] + " , a student answered!"),
-        d3.calc_lines("Upsorn used " + player.move_list[1] + " , she figured out the concept!"),
-        d3.calc_lines("Upsorn used " + player.move_list[2] + " , it's surprisingly effective..."),
-        d3.calc_lines("Upsorn used " + player.move_list[3] + " , TA remembers why they chose Upsorn"),
-        d3.calc_lines("Enemy used " + enemy.move_list[0] + " , but Upsorn won't understand until she's wiser"),
-        d3.calc_lines(
-            "Enemy used " + enemy.move_list[1] + " , but Upsorn's sympathy was already at max"),
-        d3.calc_lines("Enemy used " + enemy.move_list[2] + " , Upsorn doesn't know what's wrong with her code"),
-        d3.calc_lines("Enemy used " + enemy.move_list[3] + " , Upsorn missed the bus trying to finish!"),
-        d3.calc_lines("Enemy couldn't handle the lack of mechanics in this part and faints!")
-    ]'''
     cool_lines2_text = [
         "Upsorn is challenged by TA grunt!",
         "1: " + player.move_list[0] + " 2: " + player.move_list[1] + "3: " + player.move_list[2] + " 4: " +
