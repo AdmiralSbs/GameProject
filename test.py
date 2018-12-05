@@ -1,10 +1,10 @@
 # # RohanChandra
 # # rc8yw
 #
-import gamebox
-import pygame
-import smartbox
-from smartbox import Dialogue
+# import gamebox
+# import pygame
+# import smartbox
+# from smartbox import Dialogue
 
 #
 # xscale = 50
@@ -51,16 +51,27 @@ from smartbox import Dialogue
 
 # with open("maps\\map2.csv") as file:
 
-# while True:
-smartbox.camera = gamebox.Camera(400, 400)
-d = Dialogue(100, 36)
-q = d.how_much(
-    "All these horses in my car got me goin' fast / I just wanna do the dash, put my pedal to the max / SKRT SKRT goin' so fast hope I don't crash / SKRT SKRT one false move it will be my last")
-print(q)
+# # while True:
+# smartbox.camera = gamebox.Camera(400, 400)
+# d = Dialogue(100, 36)
+# q = d.how_much(
+#     "All these horses in my car got me goin' fast / I just wanna do the dash, put my pedal to the max / SKRT SKRT goin' so fast hope I don't crash / SKRT SKRT one false move it will be my last")
+# print(q)
+#
+# import re
+#
+# regex = re.compile(r'([0-9]+)(\.[0-9]+)?')
+# matches = regex.finditer("1.2 3.5 7.8")
+# for match in matches:
+#     print(match.group(0), match.group(1), match.group(2))
 
-import re
-
-regex = re.compile(r'([0-9]+)(\.[0-9]+)?')
-matches = regex.finditer("1.2 3.5 7.8")
-for match in matches:
-    print(match.group(0), match.group(1), match.group(2))
+x = [1, 2, 3]
+y = list(x)
+print(x == y)
+print(x is not y)
+x[0] = 97
+print(x != y)
+print(x is not y)
+print(y)
+print(3 == 3.0)
+print(3 is not 3.0)
