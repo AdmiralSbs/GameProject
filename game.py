@@ -56,8 +56,8 @@ if player is None:
     player = gamebox.from_color(100, 100, "green", 10, 10)
 
 d: Dialogue = map2.dialogue
-d2 = Dialogue(400, 36)
-d3 = Dialogue(200, 36)
+big_dialogue = Dialogue(400, 36)
+d_battle = Dialogue(200, 36)
 cool_boxes = d.text_sprites_list(map2.text)
 
 disp_pause = False
@@ -70,14 +70,14 @@ a fight.  Oooh, spooky.  WELCOME TO ESCAPE FROM ARCHIMEDES: ATTACK OF THE TA's A
 get out of these text situations, 1-4 when appropriate. X-ing out the window enough times closes it.  Please hit up the
 readme.txt
 """
-the_big_sheet = d2.create_text_sprites(d2.calc_lines(info2))
+the_big_sheet = big_dialogue.create_text_sprites(big_dialogue.calc_lines(info2))
 
 
 def start_screen(keys):
     if pygame.K_SPACE in keys:
         gamebox.stop_loop()
     camera.clear("white")
-    smartbox.draw_object(d2.background)
+    smartbox.draw_object(big_dialogue.background)
     for t in the_big_sheet:
         smartbox.draw_object(t)
     camera.display()
@@ -155,7 +155,7 @@ cool_lines2 = None
 
 def battle_prep(player, enemy):
     global cool_lines2
-    d3.update_loc()
+    d_battle.update_loc()
     cool_lines2_text = [
         "Upsorn is challenged by TA grunt!",
         "1: " + player.move_list[0] + " 2: " + player.move_list[1] + "3: " + player.move_list[2] + " 4: " +
@@ -170,7 +170,7 @@ def battle_prep(player, enemy):
         "Enemy used " + enemy.move_list[3] + " , Upsorn missed the bus trying to finish!",
         "Enemy couldn't handle the lack of mechanics in this part and faints!",
     ]
-    cool_lines2 = d3.text_sprites_list(cool_lines2_text)
+    cool_lines2 = d_battle.text_sprites_list(cool_lines2_text)
     player.scale_by(10)
     enemy.scale_by(10)
     coords = [[player.x, player.y], [enemy.x, enemy.y]]
@@ -223,7 +223,7 @@ def battle(keys):
             gamebox.stop_loop()
     camera.clear("black")
 
-    smartbox.draw_object(d3.background)
+    smartbox.draw_object(d_battle.background)
     for thing in cool_lines2[box2]:
         smartbox.draw_object(thing)
     smartbox.draw_object(player)

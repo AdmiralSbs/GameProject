@@ -146,6 +146,7 @@ class Handler:
     all_entities = {
         "enemy1": enemy1,
         "upsorn": upsorn,
+        "enemy2": enemy2,
     }
 
 
@@ -442,6 +443,13 @@ def read_text(text):
         all_text[keys[i]] = vals[i]
     return all_text
 
+
+def read_warps(text):
+    """Read the warps
+
+    :param text:
+    :return:
+    """
 
 def read_map_objects(file, w=1, h=1):
     """Get all that work DONE in one method
