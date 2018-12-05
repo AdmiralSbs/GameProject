@@ -50,9 +50,6 @@ def draw_object(sprite):
         sprite.draw(camera)
 
 
-# blocks = {0: gamebox.from_color(0, 0, "red", 50, 50)}
-
-
 def create_map_from_list(locations, dicty, xscale, yscale):
     """Given a 2D list of id values and a dictionary containing a SpriteBox for each id, generate those SpriteBox objects
     :param locations: 2D list of ids, each interior list is for one x value, each item in that list is for one y value
@@ -94,6 +91,26 @@ def add_tags_to_dict(stuff, tags):
             stuff[key].tags = tags[key]
 
 
+def sort_objects(map):
+    """Given a map, sort its objects into a dictionary by its categories
+
+    :param objects: List of spriteboxes
+    :param categories: List of strings
+    :return: None
+    """
+    categories = map.categories
+    objects = map.objects
+
+    for cat in categories:
+        map.__dict__[cat + "_list"] = []
+    for thing in objects:
+        if thing is not None:
+            if "tags" in thing.__dict__:
+                for tag in thing.tags:
+                    if tag in categories:
+                        map.__dict__[tag + "_list"].append(thing)
+
+
 class Handler:
     # Watkins, jmw4dx
     import gamebox
@@ -129,8 +146,6 @@ class Handler:
         "upsorn": upsorn,
     }
 
-    inventory = []
-
 
 class Dialogue:
     """This class handles the display of text in a "dialogue box" format similar to pokemon
@@ -164,8 +179,8 @@ class Dialogue:
     #     return max(available - Dialogue.buffer // height, 1)
 
     def calc_lines(self, text):
-        """Given the text, and assuming setup() has been called previously, figure out where the line should end,
-        delimited by space, and return the string split along those points
+        """Given the text, figure out where the line should end, delimited by spaces, and return the string split along
+        those points
 
         :param text: A string to be displayed
         :return: List of strings from text split into lines delimited by where it would be too long for the screen
@@ -239,147 +254,177 @@ class Dialogue:
 class Map:
     """It's got everything in one big package"""
 
-    def __init__(self, locations, stuff, tags, dialogue, text):
+    def __init__(self, locations, stuff, tags, dialogue, text, objects, categories, scale):
         self.locations = locations
         self.stuff = stuff
         self.tags = tags
         self.dialogue = dialogue
         self.text = text
+        self.objects = objects
+        self.categories = categories
+        self.scale = scale
 
 
-class FileMaster:
-    """This baby's gonna read and write all them damn files so hard, you won't know what hit 'em"""
+"""This baby's gonna read and write all them damn files so hard, you won't know what hit 'em"""
 
-    standard_headers = ["locations", "stuff", "tags", "dialogue", "text", "scale"]
+standard_headers = ["locations", "stuff", "tags", "dialogue", "text", "scale", "categories"]
 
-    @staticmethod
-    def num_or_scale(num, scale: int):
-        """
-        :param num: Either an integer or "scale"
-        :param scale: The value of the scale
-        :return: The integer or the value of scale
-        """
-        return scale if num == "scale" else int(num)
 
-    @staticmethod
-    def filelocation(file: str, folder: str):
-        """Given the file name, get its correct path string depending if folder exists
+def num_or_scale(num, scale: int):
+    """
+    :param num: Either an integer or "scale"
+    :param scale: The value of the scale
+    :return: The integer or the value of scale
+    """
+    return scale if num == "scale" else int(num)
 
-        :param file: bare file name
-        :param folder: optional folder
-        :return: the best name for the file
-        """
-        file_check = re.compile(r"[\\/]?([\w]+[.][\w]+)$")
-        file = (file_check.search(file)).groups()[0]
-        if Path(folder).is_dir():
-            file = folder + "\\" + file
-        return file
 
-    @staticmethod
-    def file_to_string(file):
-        """Gets string from a csv file, stripping extra commas
-        Handles file location possibly not being in the maps folder
+def filelocation(file: str, folder: str):
+    """Given the file name, get its correct path string depending if folder exists
 
-        :param file: csv file assumed to be in maps (or in base directory if maps doesn't exist)
-        :return: string version of file
-        """
-        text = ""
-        file_type = re.compile(r"(map[\w]+[.]csv)$")
-        q = file_type.search(file).groups()[0]
-        if q is not None:
-            file = FileMaster.filelocation(file, "maps")
-            try:
-                with open(file, 'r') as reader:
-                    for line in reader:
-                        text += line.replace("ï»¿", "").replace("\n", "").strip(",") + "\n"
-            except:
-                raise Exception("File " + file + " not found in maps, or in base directory if maps doesn't exist")
+    :param file: bare file name
+    :param folder: optional folder
+    :return: the best name for the file
+    """
+    file_check = re.compile(r"[\\/]?([\w]+[.][\w]+)$")
+    file = (file_check.search(file)).groups()[0]
+    if Path(folder).is_dir():
+        file = folder + "\\" + file
+    return file
+
+
+def file_to_string(file):
+    """Gets string from a csv file, stripping extra commas
+    Handles file location possibly not being in the maps folder
+
+    :param file: csv file assumed to be in maps (or in base directory if maps doesn't exist)
+    :return: string version of file
+    """
+    text = ""
+    file_type = re.compile(r"(map[\w]+[.]csv)$")
+    q = file_type.search(file).groups()[0]
+    if q is not None:
+        file = filelocation(file, "maps")
+        try:
+            with open(file, 'r') as reader:
+                for line in reader:
+                    text += line.replace("ï»¿", "").replace("\n", "").strip(",") + "\n"
+        except:
+            raise Exception("File " + file + " not found in maps, or in base directory if maps doesn't exist")
+    else:
+        raise Exception("File " + file + " not in correct csv format")
+    return text
+
+
+def read_objects(file: str):
+    """Assuming standard map format, reads map related pieces from map file and separates into manageable
+    chunks to be handled by further methods
+
+    :param file: File name (assumed to be in maps)
+    :return: Dict containing strings of objects in \n format
+    """
+    text = file_to_string(file)
+    pieces = []
+    running = ""
+    for line in text.split("\n"):
+        if running == "":
+            if line.lower().replace(":", "").replace("-", "").strip() in standard_headers:
+                running += line.lower().replace(":", "").replace("-", "").strip()
         else:
-            raise Exception("File " + file + " not in correct csv format")
-
-        return text
-
-    @staticmethod
-    def read_objects(file: str):
-        """Assuming standard map format, reads map related pieces from map file and separates into manageable
-        chunks to be handled by further methods
-
-        :param file: File name (assumed to be in maps)
-        :return: Dict containing strings of objects in \n format
-        """
-        text = FileMaster.file_to_string(file)
-        pieces = []
-        running = ""
-        for line in text.split("\n"):
-            if running == "":
-                if line.lower().replace(":", "").replace("-", "").strip() in FileMaster.standard_headers:
-                    running += line.lower().replace(":", "").replace("-", "").strip()
+            if line.lower() == "end":
+                pieces.append(running)
+                running = ""
             else:
-                if line.lower() == "end":
-                    pieces.append(running)
-                    running = ""
-                else:
-                    running += "\n" + line
-        dicty = {}
-        for piece in pieces:
-            key = piece[0:piece.find("\n")]
-            val = piece[piece.find("\n") + 1:]
-            dicty[key] = val
-        return dicty
+                running += "\n" + line
+    dicty = {}
+    for piece in pieces:
+        key = piece[0:piece.find("\n")]
+        val = piece[piece.find("\n") + 1:]
+        dicty[key] = val
+    return dicty
 
-    @staticmethod
-    def read_locations(text):
-        """Given a string that holds the numbers as they will appear
-        Reads in the information, transposes as required and returns
-        a properly formatted list of lists
 
-        :param text: String with numbers in file format
-        :return: List of lists of numbers in data format
-        """
-        lines = []
-        for thing in text.split("\n"):
-            q = thing.split(",")
-            if q != [""]:
-                lines.append(q)
-        return transpose(lines)
+def read_locations(text):
+    """Given a string that holds the numbers as they will appear
+    Reads in the information, transposes as required and returns
+    a properly formatted list of lists
 
-    @staticmethod
-    def read_stuff(text: str, scale: int):
-        """Given a string holding info for a stuff in file format, create a stuff dict
+    :param text: String with numbers in file format
+    :return: List of lists of numbers in data format
+    """
+    lines = []
+    for thing in text.split("\n"):
+        q = thing.split(",")
+        if q != [""]:
+            lines.append(q)
+    return transpose(lines)
 
-        :param text: String holding info
-        :param scale: handles scale mentions
-        :return: dict
-        """
-        stuff = {}
-        for line in text.split("\n"):
-            pieces = line.split(",")
-            key = pieces[0]
-            val = None
-            if pieces[1].lower() == "item":
-                val = Handler.all_items[pieces[2]]
-            elif pieces[1].lower() == "entity":
-                val = Handler.all_entities[pieces[2]]
-            elif pieces[1].lower() == "spritebox":
-                if pieces[2].lower() == "color":
-                    val = gamebox.from_color(0, 0, pieces[3], FileMaster.num_or_scale(pieces[4], scale),
-                                             FileMaster.num_or_scale(pieces[5], scale))
-                elif pieces[2].lower() in ["img", "image", "pic"]:
-                    val = gamebox.from_image(0, 0, FileMaster.filelocation(pieces[3], pieces[4]))
-            stuff[key] = val
 
-        return stuff
+def read_stuff(text: str, scale: int):
+    """Given a string holding info for a stuff in file format, create a stuff dict
 
-    @staticmethod
-    def read_tags(text):
-        """Given a string holding info for a stuff in file format, create a stuff dict
+    :param text: String holding info
+    :param scale: handles scale mentions
+    :return: dict
+    """
+    stuff = {}
+    for line in text.split("\n"):
+        pieces = line.split(",")
+        key = pieces[0]
+        val = None
+        if pieces[1].lower() == "item":
+            val = Handler.all_items[pieces[2]]
+        elif pieces[1].lower() == "entity":
+            val = Handler.all_entities[pieces[2]]
+        elif pieces[1].lower() == "spritebox":
+            if pieces[2].lower() == "color":
+                val = gamebox.from_color(0, 0, pieces[3], num_or_scale(pieces[4], scale),
+                                         num_or_scale(pieces[5], scale))
+            elif pieces[2].lower() in ["img", "image", "pic"]:
+                val = gamebox.from_image(0, 0, filelocation(pieces[3], pieces[4]))
+        stuff[key] = val
 
-        :param text: String holding info
-        :return: dict"""
-        tags = {}
-        for line in text.split("\n"):
-            pieces = line.split(",")
-            key = pieces[0]
-            val = pieces[1:]
-            tags[key] = val
-        return tags
+    return stuff
+
+
+def read_tags(text):
+    """Given a string holding info for a stuff in file format, create a stuff dict
+
+    :param text: String holding info
+    :return: dict"""
+    tags = {}
+    for line in text.split("\n"):
+        pieces = line.split(",")
+        key = pieces[0]
+        val = pieces[1:]
+        tags[key] = val
+    return tags
+
+
+def read_categories(text):
+    """Gets the object categories from the text
+
+    :param text: String holding info
+    :return: List"""
+    return text.split("\n")
+
+
+def read_map_objects(file, w=1, h=1):
+    """Get all that work DONE in one method
+
+    :param file: Name of map file
+    :param w: multiple of scale
+    :param h: multiple of scale
+    :return: objects, data
+    """
+    data = read_objects(file)
+    locations = read_locations(data["locations"])
+    scale = int(data["scale"])
+    stuff = read_stuff(data["stuff"], scale)
+    tags = read_tags(data["tags"])
+    add_tags_to_dict(stuff, tags)
+    objects = create_map_from_list(locations, stuff, scale * w, scale * h)
+    cats = read_categories(data["categories"])
+    map = Map(locations, stuff, tags, None, None, objects, cats, scale)
+
+    return map

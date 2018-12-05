@@ -2,7 +2,7 @@
 import pygame
 import gamebox
 import smartbox
-from smartbox import Dialogue, FileMaster, Handler
+from smartbox import Dialogue, Handler
 
 is_ready = False
 
@@ -34,14 +34,19 @@ smartbox.camera = camera
 
 inventory = []
 
-data = FileMaster.read_objects("map2.csv")
-locations2 = FileMaster.read_locations(data["locations"])
-scale = int(data["scale"])
-stuff4 = FileMaster.read_stuff(data["stuff"], scale)
-tags3 = FileMaster.read_tags(data["tags"])
-smartbox.add_tags_to_dict(stuff4, tags3)
-
-walls = smartbox.create_map_from_list(locations2, stuff4, scale, scale)
+# data = smartbox.read_objects("map2.csv")
+# #for key in data.keys():
+# #    print(key)
+# #    print(map2[key])
+# locations2 = smartbox.read_locations(map2["locations"])
+# scale = int(map2["scale"])
+# stuff4 = smartbox.read_stuff(map2["stuff"], scale)
+# tags3 = smartbox.read_tags(map2["tags"])
+# smartbox.add_tags_to_dict(stuff4, tags3)
+#
+# walls = smartbox.create_map_from_list(locations2, stuff4, scale, scale)
+map2: smartbox.Map = smartbox.read_map_objects("map2.csv")
+walls = map2.objects
 items1 = []
 
 player = None
@@ -57,8 +62,8 @@ for wall in walls:
 for item in items1:
     walls.remove(item)
 
-max_width = len(locations2) * scale
-max_height = smartbox.max_size(locations2) * scale
+max_width = len(map2.locations) * map2.scale
+max_height = smartbox.max_size(map2.locations) * map2.scale
 
 if player is None:
     player = gamebox.from_color(100, 100, "green", 10, 10)
