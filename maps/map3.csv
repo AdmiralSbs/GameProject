@@ -16,7 +16,7 @@ locations:,,,,,,,,,,,,,,,,,,,,
 0,0,0,0,0,1,3,3,3,3,3,3,3,3,1,3,3,3,3,2,1
 0,0,0,0,0,0,1,3,3,3,3,3,3,1,1,1,3|8,3|8,3|8,2,1
 0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,1,3|8,3|8,3|8,2,1
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,3,3,2,2,1
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,3,3|9,2,2,1
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,2,2,2,1
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1
 end,,,,,,,,,,,,,,,,,,,,
@@ -33,7 +33,8 @@ stuff:,,,,,,,,,,,,,,,,,,,,
 6,item,dictionary,,,,,,,,,,,,,,,,,,
 7,item,list_,,,,,,,,,,,,,,,,,,
 8,entity,enemy1,,,,,,,,,,,,,,,,,,
-9,entity,upsorn,,,,,,,,,,,,,,,,,,
+9,entity,enemy2,,,,,,,,,,,,,,,,,,
+10,entity,upsorn,,,,,,,,,,,,,,,,,,
 end,,,,,,,,,,,,,,,,,,,,
 tags:,,,,,,,,,,,,,,,,,,,,
 0,,,,,,,,,,,,,,,,,,,,
@@ -55,7 +56,8 @@ dialogue,,,,,,,,,,,,,,,,,,,,
 100,36,,,,,,,,,,,,,,,,,,,
 end,,,,,,,,,,,,,,,,,,,,
 text,,,,,,,,,,,,,,,,,,,,
-list_pu,Jews are alright,,,,,,,,,,,,,,,,,,,
+list_pu,You picked up the DICT ability,,,,,,,,,,,,,,,,,,,
 dict_pu,You picked up the DICT ability,,,,,,,,,,,,,,,,,,,
-enemy1,I HATE JEWS!,,,,,,,,,,,,,,,,,,,
+enemy1,Damn Trespasser! Prepare to meet your maker! Kya!,,,,,,,,,,,,,,,,,,,
+enemy2,"The FitnessGram Pacer Test is a multistage aerobic capacity test that progressively gets more difficult as it continues. The 20 meter pacer test will begin in 30 seconds. Line up at the start. The running speed starts slowly but gets faster each minute after you hear this signal bodeboop. A sing lap should be completed every time you hear this sound. ding Remember to run in a straight line and run as long as possible. The second time you fail to complete a lap before the sound, your test is over. The test will begin on the word start. On your mark. Get ready!… Start.",,,,,,,,,,,,,,,,,,,
 end,,,,,,,,,,,,,,,,,,,,
