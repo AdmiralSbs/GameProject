@@ -34,7 +34,7 @@ smartbox.camera = camera
 
 inventory = []
 
-map2: smartbox.Map = smartbox.read_map_objects("map2.csv")
+map2: smartbox.Map = smartbox.read_map_objects("map3.csv")
 walls = map2.objects
 items1 = []
 
@@ -100,7 +100,7 @@ def tick(keys):
         keys.remove(pygame.K_SPACE)
         if box == "list_pu" or box == "dict_pu":
             disp_pause = False
-        elif box == "enemy1":
+        elif box == "enemy1" or box == "enemy2":
             disp_pause = False
             battle_prep(player, enemy)
             items1.remove(enemy)
@@ -125,7 +125,10 @@ def tick(keys):
         if 'enemy' in item.tags:
             if player.touches(item):
                 player.move_to_stop_overlapping(item)
-                box = "enemy1"
+                if "en1" in item.tags:
+                    box = "enemy1"
+                else:
+                    box = "enemy2"
                 disp_pause = True
                 enemy = item
 
@@ -154,12 +157,12 @@ cool_lines2 = None
 
 
 def battle_prep(player, enemy):
-    global cool_lines2
+    global cool_lines2, pl, en
     d3.update_loc()
     cool_lines2_text = [
         "Upsorn is challenged by TA grunt!",
         "1: " + player.move_list[0] + " 2: " + player.move_list[1] + "3: " + player.move_list[2] + " 4: " +
-            player.move_list[3] + " (try all 4 to \"win\")",
+        player.move_list[3] + " (try all 4 to \"win\")",
         "Upsorn used " + player.move_list[0] + " , a student answered!",
         "Upsorn used " + player.move_list[1] + " , she figured out the concept!",
         "Upsorn used " + player.move_list[2] + " , it's surprisingly effective...",
@@ -171,20 +174,15 @@ def battle_prep(player, enemy):
         "Enemy couldn't handle the lack of mechanics in this part and faints!",
     ]
     cool_lines2 = d3.text_sprites_list(cool_lines2_text)
-    player.scale_by(10)
-    enemy.scale_by(10)
-    coords = [[player.x, player.y], [enemy.x, enemy.y]]
-    player.x = 100 + camera.left
-    player.y = 100 + camera.top
-    enemy.x = 300 + camera.left
-    enemy.y = 100 + camera.top
+    pl = player.copy_at(0, 0)
+    en = enemy.copy_at(0, 0)
+    pl.scale_by(100 / pl.width)
+    en.scale_by(100 / en.width)
+    pl.x = 100 + camera.left
+    pl.y = 100 + camera.top
+    en.right = -50 + camera.right
+    en.y = 100 + camera.top
     gamebox.timer_loop(30, battle)
-    player.scale_by(0.1)
-    enemy.scale_by(0.1)
-    player.x = coords[0][0]
-    player.y = coords[0][1]
-    enemy.x = coords[1][0]
-    enemy.y = coords[1][1]
     gamebox._timeron = True
     gamebox.unpause()
 
@@ -212,6 +210,7 @@ def battle(keys):
 
     if pygame.K_SPACE in keys:
         keys.clear()
+        print(en)
         if box2 in [0, 6, 7, 8, 9]:
             if sum(choices) == 10:
                 box2 = 10
@@ -226,8 +225,8 @@ def battle(keys):
     smartbox.draw_object(d3.background)
     for thing in cool_lines2[box2]:
         smartbox.draw_object(thing)
-    smartbox.draw_object(player)
-    smartbox.draw_object(enemy)
+    smartbox.draw_object(pl)
+    smartbox.draw_object(en)
     camera.display()
 
 
