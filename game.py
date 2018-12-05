@@ -53,10 +53,8 @@ player = None
 
 for wall in walls:
     if "top" in wall.tags:
-        # print("hey")
         items1.append(wall)
     if "player" in wall.tags:
-        # print("found")
         player = wall
 
 for item in items1:
@@ -68,26 +66,27 @@ max_height = smartbox.max_size(map2.locations) * map2.scale
 if player is None:
     player = gamebox.from_color(100, 100, "green", 10, 10)
 
-d = Dialogue(100, 36)
+d: Dialogue = map2.dialogue
 d2 = Dialogue(400, 36)
 d3 = Dialogue(200, 36)
-cool_lines = [
-    d.calc_lines("You picked up the LIST ability damn right you did boy"),
-    d.calc_lines("You picked up the DICT ability"),
-    d.calc_lines("I can't believe it!  You're still moving...  Prepare to perish!"),
-]
-cool_boxes = [
-    d.create_text_sprites(cool_lines[0]),
-    d.create_text_sprites(cool_lines[1]),
-    d.create_text_sprites(cool_lines[2]),
-]
+# cool_lines = [
+#     d.calc_lines("You picked up the LIST ability damn right you did boy"),
+#     d.calc_lines("You picked up the DICT ability"),
+#     d.calc_lines("I can't believe it!  You're still moving...  Prepare to perish!"),
+# ]
+# cool_boxes = [
+#     d.create_text_sprites(cool_lines[0]),
+#     d.create_text_sprites(cool_lines[1]),
+#     d.create_text_sprites(cool_lines[2]),
+#]
+cool_boxes = d.text_sprites_list(map2.text)
 
 disp_pause = False
 timer_end = 0
 timer = 0
-box = 0
+box = "list_pu"
 enemy = None
-
+# print(list(map2.text.keys()))
 info2 = """Peep game.py and the readme.txt for some cool stuff. Use WASD to move around, and touch the red guy to start
 a fight.  Oooh, spooky.  WELCOME TO ESCAPE FROM ARCHIMEDES: ATTACK OF THE TA's AND THE PA's.  Oooh, aaah.  SPACE to
 get out of these text situations, 1-4 when appropriate. X-ing out the window enough times closes it.  Please hit up the
@@ -108,8 +107,7 @@ def start_screen(keys):
 
 def tick(keys):
     global timer, timer_end, disp_pause, box, enemy
-    timer += 0
-    # print(disp_pause)
+    timer += 1
     if not disp_pause:
         if pygame.K_a in keys:
             player.move(-5, 0)
@@ -120,10 +118,11 @@ def tick(keys):
         if pygame.K_s in keys:
             player.move(0, 5)
     if pygame.K_SPACE in keys:
+        print("space")
         keys.remove(pygame.K_SPACE)
-        if box == 1 or box == 0:
+        if box == "list_pu" or box == "dict_pu":
             disp_pause = False
-        elif box == 2:
+        elif box == "enemy1":
             disp_pause = False
             battle_prep(player, enemy)
             items1.remove(enemy)
@@ -137,21 +136,18 @@ def tick(keys):
         if "pick_up" in item.tags and 'enemy' not in item.tags:
             if player.touches(item):
                 items1.remove(item)
-                print(item.tags)
                 inventory.append(item)
                 disp_pause = True
                 vals = {
-                    "LIST": 0,
-                    "DICT": 1,
+                    "LIST": "list_pu",
+                    "DICT": "dict_pu",
                 }
-                # item.hi()
-                # print(item.__dict__.keys())
                 box = vals[item.name]
 
         if 'enemy' in item.tags:
             if player.touches(item):
                 player.move_to_stop_overlapping(item)
-                box = 2
+                box = "enemy1"
                 disp_pause = True
                 enemy = item
 
@@ -186,7 +182,7 @@ cool_lines2 = None
 def battle_prep(player, enemy):
     global cool_lines2
     d3.update_loc()
-    cool_lines2 = [
+    '''cool_lines2_text = [
         d3.calc_lines("Upsorn is challenged by TA grunt!"),
         d3.calc_lines("1: " + player.move_list[0] + " 2: " + player.move_list[1] +
                       " 3: " + player.move_list[2] + " 4: " + player.move_list[3] + " (try all 4 to \"win\")"),
@@ -200,7 +196,22 @@ def battle_prep(player, enemy):
         d3.calc_lines("Enemy used " + enemy.move_list[2] + " , Upsorn doesn't know what's wrong with her code"),
         d3.calc_lines("Enemy used " + enemy.move_list[3] + " , Upsorn missed the bus trying to finish!"),
         d3.calc_lines("Enemy couldn't handle the lack of mechanics in this part and faints!")
+    ]'''
+    cool_lines2_text = [
+        "Upsorn is challenged by TA grunt!",
+        "1: " + player.move_list[0] + " 2: " + player.move_list[1] + "3: " + player.move_list[2] + " 4: " +
+            player.move_list[3] + " (try all 4 to \"win\")",
+        "Upsorn used " + player.move_list[0] + " , a student answered!",
+        "Upsorn used " + player.move_list[1] + " , she figured out the concept!",
+        "Upsorn used " + player.move_list[2] + " , it's surprisingly effective...",
+        "Upsorn used " + player.move_list[3] + " , TA remembers why they chose Upsorn",
+        "Enemy used " + enemy.move_list[0] + " , but Upsorn won't understand until she's wiser",
+        "Enemy used " + enemy.move_list[1] + " , but Upsorn's sympathy was already at max",
+        "Enemy used " + enemy.move_list[2] + " , Upsorn doesn't know what's wrong with her code",
+        "Enemy used " + enemy.move_list[3] + " , Upsorn missed the bus trying to finish!",
+        "Enemy couldn't handle the lack of mechanics in this part and faints!",
     ]
+    cool_lines2 = d3.text_sprites_list(cool_lines2_text)
     player.scale_by(10)
     enemy.scale_by(10)
     coords = [[player.x, player.y], [enemy.x, enemy.y]]
@@ -254,7 +265,7 @@ def battle(keys):
     camera.clear("black")
 
     smartbox.draw_object(d3.background)
-    for thing in d3.create_text_sprites(cool_lines2[box2]):
+    for thing in cool_lines2[box2]:
         smartbox.draw_object(thing)
     smartbox.draw_object(player)
     smartbox.draw_object(enemy)

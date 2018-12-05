@@ -232,6 +232,27 @@ class Dialogue:
             self.pieces_of_text.remove(thing)
         return q[0:count + 1]
 
+    def text_sprites_list(self, lines_list):
+        """Does all the work for them!
+
+        :param lines_list: list of lines
+        :return: list of created text sprites
+        """
+
+        if type(lines_list) == list:
+            sprites = []
+            for lin in lines_list:
+                s = self.create_text_sprites(self.calc_lines(lin))
+                sprites.append(s)
+            return sprites
+
+        if type(lines_list) == dict:
+            sprites = {}
+            for key in lines_list.keys():
+                s = self.create_text_sprites(self.calc_lines(lines_list[key]))
+                sprites[key] = s
+            return sprites
+
 
 class Map:
     """It's got everything in one big package"""
@@ -401,6 +422,25 @@ def read_dialogue(text):
     return d
 
 
+def read_text(text):
+    """Get the lines of dialogue from the text
+
+    :param text: String holding info
+    :return: dict of strings"""
+    keys = []
+    vals = []
+    for lin in text.split("\n"):
+        lin = lin.strip(",")
+        key = lin[0:lin.find(",")]
+        val = lin[lin.find(",") + 1:]
+        keys.append(key)
+        vals.append(val)
+    all_text = {}
+    for i in range(len(keys)):
+        all_text[keys[i]] = vals[i]
+    return all_text
+
+
 def read_map_objects(file, w=1, h=1):
     """Get all that work DONE in one method
 
@@ -418,6 +458,7 @@ def read_map_objects(file, w=1, h=1):
     objects = create_map_from_list(locations, stuff, scale * w, scale * h)
     cats = read_categories(data["categories"])
     dialogue = read_dialogue(data["dialogue"])
-    map = Map(locations, stuff, tags, dialogue, None, objects, cats, scale)
+    text = read_text(data["text"])
+    map = Map(locations, stuff, tags, dialogue, text, objects, cats, scale)
 
     return map
