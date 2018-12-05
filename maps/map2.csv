@@ -39,7 +39,10 @@ tags:,,,,,,,
 8,enemy,top,,,,,
 9,player,top,,,,,
 end,,,,,,,
-categories
-tile
-top
-end
+categories,,,,,,,
+tile,,,,,,,
+top,,,,,,,
+end,,,,,,,
+dialogue,,,,,,,
+100,36,,,,,,
+end,,,,,,,

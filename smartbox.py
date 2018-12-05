@@ -417,6 +417,7 @@ def read_map_objects(file, w=1, h=1):
     add_tags_to_dict(stuff, tags)
     objects = create_map_from_list(locations, stuff, scale * w, scale * h)
     cats = read_categories(data["categories"])
-    map = Map(locations, stuff, tags, None, None, objects, cats, scale)
+    dialogue = read_dialogue(data["dialogue"])
+    map = Map(locations, stuff, tags, dialogue, None, objects, cats, scale)
 
     return map
