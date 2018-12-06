@@ -124,7 +124,7 @@ def tick(keys):
     for item in the_map().get_list("pick_up"):
         if player.touches(item):
             the_map().remove(item)
-            inventory.append(item)
+            inventory.append(item.name.lower())
             disp_pause = True
             box = item.name.lower() + "_pu"
 
@@ -143,14 +143,19 @@ def tick(keys):
             item.move_speed()
 
     for gate in the_map().get_list("gate"):
-        if player.touches("gate"):
-            item = smartbox.Handler.all_items[gate.tags[2]]
+        if player.touches(gate):
+            item = smartbox.Handler.all_items[gate.tags[2]].name.lower()
             if item in inventory:
-                box = "gate_" + gate.tags[2] + "_yes"
+                box = "gate_" + item.replace("_","") + "_yes"
                 the_gate = gate
             else:
-                box = "gate_" + gate.tags[2] + "_no"
+                box = "gate_" + item.replace("_","") + "_no"
             disp_pause = True
+            player.move_to_stop_overlapping(gate)
+            if player.left_touches(gate):
+                player.x += 5
+            if player.top_touches(gate):
+                player.y -= 0
 
     check = False
     for warp in the_map().get_list("warp"):
