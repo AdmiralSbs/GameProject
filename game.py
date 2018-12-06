@@ -56,10 +56,13 @@ def calc_maxes():
 
 calc_maxes()
 
+just_warped = False
+
 def warp_player(new_map, xloc, yloc):
+    global curr_map
     curr_map = new_map
-    xloc = (xloc + 0.5) * the_map().scale
-    yloc = (yloc + 0.5) * the_map().scale
+    player.x = (xloc + 0.5) * the_map().scale
+    player.y = (yloc + 0.5) * the_map().scale
 
 if player is None:
     player = gamebox.from_color(100, 100, "green", 10, 10)
@@ -102,7 +105,7 @@ def gen_move(keys):
 
 
 def tick(keys):
-    global disp_pause, box, enemy
+    global disp_pause, box, enemy, just_warped
     gen_move(keys)
     if pygame.K_SPACE in keys:
         keys.remove(pygame.K_SPACE)
@@ -130,10 +133,14 @@ def tick(keys):
             box = enemy.name.lower() + "_meet"
             disp_pause = True
 
+    check = False
     for warp in the_map().get_list("warp"):
         if player.touches(warp):
-            parts = the_map().warps[warp.tags()]
-            warp_player(parts[0], parts[1], parts[2])
+            check = True
+            parts = the_map().warps[warp.tags[1]]
+            if not just_warped:
+                warp_player(parts[0], parts[1], parts[2])
+    just_warped = check
 
     camera.x = min(max(player.x, camera.width / 2), max_width - camera.width / 2)
     camera.y = min(max(player.y, camera.height / 2), max_height - camera.height / 2)
