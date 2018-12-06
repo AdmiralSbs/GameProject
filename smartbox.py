@@ -272,13 +272,16 @@ class Map:
         self.warps = warps
         sort_objects(self)
 
-    def get_list(self, cat_name):
+    def get_list(self, cat_name: str):
         """Get list by name
 
         :param cat_name:
         :return:
         """
-        return self.__dict__[str(cat_name) + "_list"]
+        if (cat_name + "_list") in self.__dict__:
+            return self.__dict__[cat_name + "_list"]
+        else:
+            return None
 
     def remove(self, thing):
         """Remove thing from all lists
@@ -384,6 +387,9 @@ def read_locations(text):
     for thing in text.split("\n"):
         q = thing.split(",")
         if q != [""]:
+            for piece in q:
+                if piece == "":
+                    piece = 0
             lines.append(q)
     return transpose(lines)
 
