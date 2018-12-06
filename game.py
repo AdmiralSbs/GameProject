@@ -68,8 +68,8 @@ player = smartbox.Handler.upsorn
 warp_player(0, 3, 1)
 
 d: smartbox.Dialogue = the_map().dialogue
-big_dialogue = smartbox.Dialogue(400, 36)
-d_battle = smartbox.Dialogue(200, 36)
+big_dialogue: smartbox.Dialogue = smartbox.Dialogue(400, 36)
+d_battle: smartbox.Dialogue = smartbox.Dialogue(200, 36)
 
 disp_pause = False
 box = "list_pu"
