@@ -272,6 +272,7 @@ class Map:
         self.scale = scale
         self.warps = warps
         sort_objects(self)
+        self.cool_boxes = self.dialogue.text_sprites_list(self.text)
 
     def get_list(self, cat_name: str):
         """Get list by name
