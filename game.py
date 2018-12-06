@@ -40,16 +40,26 @@ maps = [smartbox.read_map_objects("map0.csv"),
         smartbox.read_map_objects("map4.csv")]
 curr_map = 0
 
+
 def the_map():
     return maps[curr_map]
 
+
 player = None
 
-for thing in the_map().get_list("player"):
-    player = thing
 
-max_width = len(the_map().locations) * the_map().scale
-max_height = smartbox.max_size(the_map().locations) * the_map().scale
+def calc_maxes():
+    global max_width, max_height
+    max_width = len(the_map().locations) * the_map().scale
+    max_height = smartbox.max_size(the_map().locations) * the_map().scale
+
+
+calc_maxes()
+
+def warp_player(new_map, xloc, yloc):
+    curr_map = new_map
+    xloc = (xloc + 0.5) * the_map().scale
+    yloc = (yloc + 0.5) * the_map().scale
 
 if player is None:
     player = gamebox.from_color(100, 100, "green", 10, 10)
@@ -57,11 +67,8 @@ if player is None:
 d: smartbox.Dialogue = the_map().dialogue
 big_dialogue = smartbox.Dialogue(400, 36)
 d_battle = smartbox.Dialogue(200, 36)
-cool_boxes = d.text_sprites_list(the_map().text)
 
 disp_pause = False
-timer_end = 0
-timer = 0
 box = "list_pu"
 enemy = None
 info2 = """Peep game.py and the readme.txt for some cool stuff. Use WASD to move around, and touch the red guy to start
@@ -95,8 +102,7 @@ def gen_move(keys):
 
 
 def tick(keys):
-    global timer, timer_end, disp_pause, box, enemy
-    timer += 1
+    global disp_pause, box, enemy
     gen_move(keys)
     if pygame.K_SPACE in keys:
         keys.remove(pygame.K_SPACE)
@@ -124,6 +130,11 @@ def tick(keys):
             box = enemy.name.lower() + "_meet"
             disp_pause = True
 
+    for warp in the_map().get_list("warp"):
+        if player.touches(warp):
+            parts = the_map().warps[warp.tags()]
+            warp_player(parts[0], parts[1], parts[2])
+
     camera.x = min(max(player.x, camera.width / 2), max_width - camera.width / 2)
     camera.y = min(max(player.y, camera.height / 2), max_height - camera.height / 2)
 
@@ -137,7 +148,7 @@ def tick(keys):
     d.update_loc(True)
     if disp_pause:
         smartbox.draw_object(d.background)
-        for thing in cool_boxes[box]:
+        for thing in the_map().cool_boxes[box]:
             smartbox.draw_object(thing)
 
     camera.display()
@@ -221,5 +232,6 @@ def battle(keys):
     camera.display()
 
 
+playing = True
 gamebox.timer_loop(30, start_screen)
 gamebox.timer_loop(30, tick)
