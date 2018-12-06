@@ -33,23 +33,31 @@ smartbox.camera = camera
 
 inventory = []
 
-map2: smartbox.Map = smartbox.read_map_objects("map6.csv")
+maps = [smartbox.read_map_objects("map0.csv"),
+        smartbox.read_map_objects("map1.csv"),
+        smartbox.read_map_objects("map2.csv"),
+        smartbox.read_map_objects("map3.csv"),
+        smartbox.read_map_objects("map4.csv")]
+curr_map = 0
+
+def the_map():
+    return maps[curr_map]
 
 player = None
 
-for thing in map2.get_list("player"):
+for thing in the_map().get_list("player"):
     player = thing
 
-max_width = len(map2.locations) * map2.scale
-max_height = smartbox.max_size(map2.locations) * map2.scale
+max_width = len(the_map().locations) * the_map().scale
+max_height = smartbox.max_size(the_map().locations) * the_map().scale
 
 if player is None:
     player = gamebox.from_color(100, 100, "green", 10, 10)
 
-d: smartbox.Dialogue = map2.dialogue
+d: smartbox.Dialogue = the_map().dialogue
 big_dialogue = smartbox.Dialogue(400, 36)
 d_battle = smartbox.Dialogue(200, 36)
-cool_boxes = d.text_sprites_list(map2.text)
+cool_boxes = d.text_sprites_list(the_map().text)
 
 disp_pause = False
 timer_end = 0
@@ -98,32 +106,31 @@ def tick(keys):
             battle_prep()
             disp_pause = False
 
-    for wall in map2.get_list("wall"):
+    for wall in the_map().get_list("wall"):
         if player.touches(wall):
             player.move_to_stop_overlapping(wall)
 
-    for item in map2.get_list("pick_up"):
+    for item in the_map().get_list("pick_up"):
         if player.touches(item):
-            map2.remove(item)
+            the_map().remove(item)
             inventory.append(item)
             disp_pause = True
             box = item.name.lower() + "_pu"
 
-    for item in map2.get_list("enemy"):
+    for item in the_map().get_list("enemy"):
         if player.touches(item):
             player.move_to_stop_overlapping(item)
             enemy = item
             box = enemy.name.lower() + "_meet"
             disp_pause = True
 
-
     camera.x = min(max(player.x, camera.width / 2), max_width - camera.width / 2)
     camera.y = min(max(player.y, camera.height / 2), max_height - camera.height / 2)
 
     camera.clear("green")
-    for tile in map2.get_list("tile"):
+    for tile in the_map().get_list("tile"):
         smartbox.draw_object(tile)
-    for item in map2.get_list("top"):
+    for item in the_map().get_list("top"):
         smartbox.draw_object(item)
     smartbox.draw_object(player)
 
@@ -139,6 +146,8 @@ def tick(keys):
 cool_lines2 = None
 
 choices = []
+
+
 def battle_prep():
     global cool_lines2, choices, pl, en
     choices = []
@@ -169,7 +178,7 @@ def battle_prep():
     gamebox.timer_loop(30, battle)
     gamebox._timeron = True
     gamebox.unpause()
-    map2.remove(enemy)
+    the_map().remove(enemy)
 
 
 box2 = 0
