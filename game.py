@@ -33,7 +33,7 @@ smartbox.camera = camera
 
 inventory = []
 
-map2: smartbox.Map = smartbox.read_map_objects("map2.csv")
+map2: smartbox.Map = smartbox.read_map_objects("map6.csv")
 
 player = None
 
