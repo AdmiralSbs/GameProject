@@ -155,7 +155,11 @@ def tick(keys):
             if player.left_touches(gate):
                 player.x += 5
             if player.top_touches(gate):
-                player.y -= 0
+                player.y -= 5
+            if player.right_touches(gate):
+                player.x -= 5
+            if player.bottom_touches(gate):
+                player.y += 5
 
     check = False
     for warp in the_map().get_list("warp"):

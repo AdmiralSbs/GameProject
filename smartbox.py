@@ -122,15 +122,15 @@ class Handler:
     enemy_moves = ['Vague Answer', 'You know we\'re people too', 'PA Rejected', 'Make lab harder at 3:12pm']
 
     for_loop = gamebox.from_text(0, 0, "FOR", 12, "yellow", bold=True, italic=False)
-    make_item(for_loop, "FOR_LOOP", 'key', '1')
+    make_item(for_loop, "for_loop", 'key', '1')
     while_loop = gamebox.from_text(0, 0, "WHILE", 12, "red", bold=True, italic=False)
-    make_item(while_loop, 'WHILE_LOOP', 'key', '2')
+    make_item(while_loop, 'while_loop', 'key', '2')
     dictionary = gamebox.from_text(0, 0, "DICT", 12, "lightblue", bold=True, italic=False)
-    make_item(dictionary, 'DICT', 'key', '3')
+    make_item(dictionary, 'dict_', 'key', '3')
     list_ = gamebox.from_text(0, 0, "LIST", 12, "gray", bold=True, italic=False)
-    make_item(list_, "LIST", 'key', '4')
+    make_item(list_, "list_", 'key', '4')
     print_ = gamebox.from_text(0, 0, "PRINT", 12, "gray", bold=True, italic=False)
-    make_item(print_, "PRINT", 'key', '0')
+    make_item(print_, "print_", 'key', '0')
 
     enemy1 = gamebox.from_color(0, 0, 'red', 10, 10)
     make_entity(enemy1, 'Bob', enemy_moves, 50)
