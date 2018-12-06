@@ -45,9 +45,6 @@ def the_map():
     return maps[curr_map]
 
 
-player = None
-
-
 def calc_maxes():
     global max_width, max_height
     max_width = len(the_map().locations) * the_map().scale
@@ -66,8 +63,7 @@ def warp_player(new_map, xloc, yloc):
     print(curr_map)
 
 
-if player is None:
-    player = gamebox.from_color(100, 100, "green", 10, 10)
+player = smartbox.Handler.upsorn
 
 warp_player(0, 3, 1)
 
