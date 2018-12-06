@@ -356,7 +356,7 @@ def num_or_scale(num, scale: int):
     :param scale: The value of the scale
     :return: The integer or the value of scale
     """
-    return scale if num == "scale" else int(num)*scale
+    return scale if num == "scale" else int(num)
 
 
 def read_all_data(file: str):
