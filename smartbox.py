@@ -126,11 +126,11 @@ class Handler:
     while_loop = gamebox.from_text(0, 0, "WHILE", 12, "red", bold=True, italic=False)
     make_item(while_loop, 'while_loop', 'key', '2')
     dictionary = gamebox.from_text(0, 0, "DICT", 12, "lightblue", bold=True, italic=False)
-    make_item(dictionary, 'dict_', 'key', '3')
+    make_item(dictionary, 'dict', 'key', '3')
     list_ = gamebox.from_text(0, 0, "LIST", 12, "gray", bold=True, italic=False)
-    make_item(list_, "list_", 'key', '4')
+    make_item(list_, "list", 'key', '4')
     print_ = gamebox.from_text(0, 0, "PRINT", 12, "gray", bold=True, italic=False)
-    make_item(print_, "print_", 'key', '0')
+    make_item(print_, "print", 'key', '0')
 
     enemy1 = gamebox.from_color(0, 0, 'red', 10, 10)
     make_entity(enemy1, 'Bob', enemy_moves, 50)
@@ -143,8 +143,8 @@ class Handler:
         "for_loop": for_loop,
         "while_loop": while_loop,
         "dictionary": dictionary,
-        "list_": list_,
-        "print_": print_,
+        "list": list_,
+        "print": print_,
     }
 
     all_entities = {
