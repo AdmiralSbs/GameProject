@@ -2,12 +2,12 @@
 1,1,1,1,1,1,1,0
 1,2,3,3,3,10,1,0
 1,2,3,3,3,10,1,0
-1,1,1,7|3,1,1,1,0
+1,1,1,3,1,1,1,0
 1,1,1,3,1,1,1,1
-1,6|3,3,3,3,3,3,1
+1,9|3,3,3,3,3,3,1
 1,1,1,1,1,1,3,1
 0,0,1,1,11,1,3,1
-0,0,1,3|12,3|8,3,3,1
+0,0,1,3|7,3|12,3|8,3,1
 0,0,1,1,1,1,1,1
 0,0,0,0,0,0,0,0
 0,0,0,0,0,0,0,0
@@ -25,6 +25,7 @@ stuff:,,,,,,,
 6,item,dictionary,,,,,
 7,item,list_,,,,,
 8,entity,enemy1,,,,,
+9,item,print_,,,,,
 10,SpriteBox,color,cyan,scale,scale,,
 11,SpriteBox,color,cyan,scale,scale,,
 12,SpriteBox,color,gold,25,25,,
@@ -36,11 +37,12 @@ tags:,,,,,,,
 10,tile,to_map2,warp,,,,
 11,tile,to_map3,warp,,,,
 3,tile,,,,,,
-4,pick_up,top,,,,,
+4,pick_up,top,,,,,s
 5,pick_up,top,,,,,
 6,pick_up,top,,,,,
 7,pick_up,top,,,,,
-8,enemy,top,,,,,
+9,pick_up,top,,,,,
+8,enemy,top,vertical,,,,
 12,gate,top,,,,,
 end,,,,,,,
 dialogue,,,,,,,
@@ -49,6 +51,7 @@ end,,,,,,,
 text,,,,,,,
 list_pu,You picked up the LIST ability damn right you did boy,,,,,,
 dict_pu,You picked up the DICT ability,,,,,,
+print_pu,You picked up the PRINT statement! Use this to complete (get past) the first PA (gold box),,,,,
 bob_meet,I can't believe it!  You're still moving...  Prepare to perish!,,,,,,
 end,,,,,,,
 warps,,,,,,,

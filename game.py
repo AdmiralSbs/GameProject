@@ -109,7 +109,7 @@ def tick(keys):
     gen_move(keys)
     if pygame.K_SPACE in keys:
         keys.remove(pygame.K_SPACE)
-        if box == "list_pu" or box == "dict_pu":
+        if "_pu" in box:
             disp_pause = False
         elif "meet" in box:
             battle_prep()
@@ -132,6 +132,13 @@ def tick(keys):
             enemy = item
             box = enemy.name.lower() + "_meet"
             disp_pause = True
+        if "vertical" in item.tags and not disp_pause:
+            if item.speedy == 0:
+                item.speedy = 1
+            for wall in the_map().get_list("wall"):
+                if wall.touches(item):
+                    item.speedy *= -1
+            item.move_speed()
 
     check = False
     for warp in the_map().get_list("warp"):
