@@ -2,11 +2,7 @@ top
 tile
 pick_up
 enemy
-tile
-top
 wall
 player
-to_map1
-pick_up
-enemy
 warp
+gate
