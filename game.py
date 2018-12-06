@@ -63,9 +63,12 @@ def warp_player(new_map, xloc, yloc):
     curr_map = new_map
     player.x = (xloc + 0.5) * the_map().scale
     player.y = (yloc + 0.5) * the_map().scale
+    calc_maxes()
 
 if player is None:
     player = gamebox.from_color(100, 100, "green", 10, 10)
+
+warp_player(0, 3, 1)
 
 d: smartbox.Dialogue = the_map().dialogue
 big_dialogue = smartbox.Dialogue(400, 36)
