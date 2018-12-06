@@ -67,7 +67,6 @@ player = smartbox.Handler.upsorn
 
 warp_player(0, 3, 1)
 
-d: smartbox.Dialogue = the_map().dialogue
 big_dialogue: smartbox.Dialogue = smartbox.Dialogue(400, 36)
 d_battle: smartbox.Dialogue = smartbox.Dialogue(200, 36)
 
@@ -105,15 +104,18 @@ def gen_move(keys):
 
 
 def tick(keys):
-    global disp_pause, box, enemy, just_warped
+    global disp_pause, box, enemy, just_warped, the_gate
     gen_move(keys)
     if pygame.K_SPACE in keys:
         keys.remove(pygame.K_SPACE)
-        if "_pu" in box:
+        if "_pu" in box or "_no" in box:
             disp_pause = False
         elif "meet" in box:
             battle_prep()
             disp_pause = False
+        elif "_yes" in box:
+            disp_pause = False
+            the_map().remove(the_gate)
 
     for wall in the_map().get_list("wall"):
         if player.touches(wall):
@@ -140,6 +142,16 @@ def tick(keys):
                     item.speedy *= -1
             item.move_speed()
 
+    for gate in the_map().get_list("gate"):
+        if player.touches("gate"):
+            item = smartbox.Handler.all_items[gate.tags[2]]
+            if item in inventory:
+                box = "gate_" + gate.tags[2] + "_yes"
+                the_gate = gate
+            else:
+                box = "gate_" + gate.tags[2] + "_no"
+            disp_pause = True
+
     check = False
     for warp in the_map().get_list("warp"):
         if player.touches(warp):
@@ -159,9 +171,9 @@ def tick(keys):
         smartbox.draw_object(item)
     smartbox.draw_object(player)
 
-    d.update_loc(True)
+    the_map().dialogue.update_loc(True)
     if disp_pause:
-        smartbox.draw_object(d.background)
+        smartbox.draw_object(the_map().dialogue.background)
         for thing in the_map().cool_boxes[box]:
             smartbox.draw_object(thing)
 
@@ -194,8 +206,8 @@ def battle_prep():
     cool_lines2 = d_battle.text_sprites_list(cool_lines2_text)
     pl = player.copy()
     en = enemy.copy()
-    pl.scale_by(100 / pl.width)
-    en.scale_by(100 / en.width)
+    pl.scale_by(100 / pl.height)
+    en.scale_by(100 / en.height)
     pl.x = 100 + camera.left
     pl.y = 100 + camera.top
     en.x = 300 + camera.left
@@ -234,6 +246,7 @@ def battle(keys):
                 box2 = 1
         elif box2 in [2, 3, 4, 5]:
             box2 += 4
+            player.health -= 5
         elif box2 == 10:
             gamebox.stop_loop()
     camera.clear("black")
@@ -243,6 +256,18 @@ def battle(keys):
         smartbox.draw_object(thing)
     smartbox.draw_object(pl)
     smartbox.draw_object(en)
+    # pl.x = 100 + camera.left
+    # pl.y = 100 + camera.top
+    # en.x = 300 + camera.left
+    # en.y = 100 + camera.top
+    #smartbox.draw_object(gamebox.from_color(100 + camera.left, 25 + camera.top, "green", 100, 30))
+    #h1 = gamebox.from_color(100 + camera.left, 25 + camera.top, "red", 100, 30)
+    #h1.width = max((player.max_health - player.health) / player.max_health * 100, 0)
+    #h1.right = 150
+    #smartbox.draw_object(h1)
+    # print(h1)
+    # h2 = gamebox.from_color(100 + camera.left, 25 + camera.top, "green", 100, 30)
+
     camera.display()
 
 
