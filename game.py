@@ -33,7 +33,12 @@ smartbox.camera = camera
 
 inventory = []
 
-map2: smartbox.Map = smartbox.read_map_objects("map2.csv")
+maps = [smartbox.read_map_objects("map0.csv"),
+        smartbox.read_map_objects("map1.csv"),
+        smartbox.read_map_objects("map2.csv"),
+        smartbox.read_map_objects("map3.csv"),
+        smartbox.read_map_objects("map4.csv"),]
+curr_map = 0
 
 player = None
 
