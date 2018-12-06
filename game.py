@@ -94,29 +94,28 @@ def tick(keys):
         keys.remove(pygame.K_SPACE)
         if box == "list_pu" or box == "dict_pu":
             disp_pause = False
-        elif box == "enemy1":
-            disp_pause = False
-            battle_prep(player, enemy)
+        elif "meet" in box:
+            battle_prep()
             disp_pause = False
 
-    for wall in map2.objects:
-        if "wall" in wall.tags:
-            if player.touches(wall):
-                player.move_to_stop_overlapping(wall)
-    for item in map2.get_list("top"):
-        if "pick_up" in item.tags:
-            if player.touches(item):
-                map2.remove(item)
-                inventory.append(item)
-                disp_pause = True
-                box = item.name.lower() + "_pu"
+    for wall in map2.get_list("wall"):
+        if player.touches(wall):
+            player.move_to_stop_overlapping(wall)
 
-        if 'enemy' in item.tags:
-            if player.touches(item):
-                player.move_to_stop_overlapping(item)
-                box = "enemy1"
-                disp_pause = True
-                enemy = item
+    for item in map2.get_list("pick_up"):
+        if player.touches(item):
+            map2.remove(item)
+            inventory.append(item)
+            disp_pause = True
+            box = item.name.lower() + "_pu"
+
+    for item in map2.get_list("enemy"):
+        if player.touches(item):
+            player.move_to_stop_overlapping(item)
+            enemy = item
+            box = enemy.name.lower() + "_meet"
+            disp_pause = True
+
 
     camera.x = min(max(player.x, camera.width / 2), max_width - camera.width / 2)
     camera.y = min(max(player.y, camera.height / 2), max_height - camera.height / 2)
@@ -128,6 +127,7 @@ def tick(keys):
         smartbox.draw_object(item)
     smartbox.draw_object(player)
 
+    d.update_loc(True)
     if disp_pause:
         smartbox.draw_object(d.background)
         for thing in cool_boxes[box]:
@@ -138,10 +138,11 @@ def tick(keys):
 
 cool_lines2 = None
 
-
-def battle_prep(player, enemy):
-    global cool_lines2
-    d_battle.update_loc()
+choices = []
+def battle_prep():
+    global cool_lines2, choices, pl, en
+    choices = []
+    d_battle.update_loc(True)
     cool_lines2_text = [
         "Upsorn is challenged by TA grunt!",
         "1: " + player.move_list[0] + " 2: " + player.move_list[1] + "3: " + player.move_list[2] + " 4: " +
@@ -157,32 +158,25 @@ def battle_prep(player, enemy):
         "Enemy couldn't handle the lack of mechanics in this part and faints!",
     ]
     cool_lines2 = d_battle.text_sprites_list(cool_lines2_text)
-    player.scale_by(10)
-    enemy.scale_by(10)
-    coords = [[player.x, player.y], [enemy.x, enemy.y]]
-    player.x = 100 + camera.left
-    player.y = 100 + camera.top
-    enemy.x = 300 + camera.left
-    enemy.y = 100 + camera.top
+    pl = player.copy()
+    en = enemy.copy()
+    pl.scale_by(100 / pl.width)
+    en.scale_by(100 / en.width)
+    pl.x = 100 + camera.left
+    pl.y = 100 + camera.top
+    en.x = 300 + camera.left
+    en.y = 100 + camera.top
     gamebox.timer_loop(30, battle)
-    player.scale_by(0.1)
-    enemy.scale_by(0.1)
-    player.x = coords[0][0]
-    player.y = coords[0][1]
-    enemy.x = coords[1][0]
-    enemy.y = coords[1][1]
     gamebox._timeron = True
     gamebox.unpause()
     map2.remove(enemy)
 
 
-stage = "declare"
 box2 = 0
-choices = []
 
 
 def battle(keys):
-    global stage, box2, choices
+    global box2, choices
 
     if box2 == 1:
         if pygame.K_1 in keys:
@@ -213,8 +207,8 @@ def battle(keys):
     smartbox.draw_object(d_battle.background)
     for thing in cool_lines2[box2]:
         smartbox.draw_object(thing)
-    smartbox.draw_object(player)
-    smartbox.draw_object(enemy)
+    smartbox.draw_object(pl)
+    smartbox.draw_object(en)
     camera.display()
 
 
