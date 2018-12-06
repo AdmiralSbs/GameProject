@@ -260,7 +260,7 @@ class Dialogue:
 class Map:
     """It's got everything in one big package"""
 
-    def __init__(self, locations, stuff, tags, dialogue, text, objects, categories, scale):
+    def __init__(self, locations, stuff, tags, dialogue, text, objects, categories, scale, warps):
         self.locations = locations
         self.stuff = stuff
         self.tags = tags
@@ -269,11 +269,33 @@ class Map:
         self.objects = objects
         self.categories = categories
         self.scale = scale
+        self.warps = warps
+        sort_objects(self)
+
+    def get_list(self, cat_name):
+        """Get list by name
+
+        :param cat_name:
+        :return:
+        """
+        return self.__dict__[str(cat_name) + "_list"]
+
+    def remove(self, thing):
+        """Remove thing from all lists
+
+        :param thing:
+        :return:
+        """
+        if thing in self.objects:
+            self.objects.remove(thing)
+            for cat in self.categories:
+                if thing in self.__dict__[str(cat) + "_list"]:
+                     self.__dict__[str(cat) + "_list"].remove(thing)
 
 
 """This baby's gonna read and write all them damn files so hard, you won't know what hit 'em"""
 
-standard_headers = ["locations", "stuff", "tags", "dialogue", "text", "scale", "categories"]
+standard_headers = ["locations", "stuff", "tags", "dialogue", "text", "scale", "categories", "warps"]
 
 
 def num_or_scale(num, scale: int):
@@ -447,9 +469,15 @@ def read_text(text):
 def read_warps(text):
     """Read the warps
 
-    :param text:
-    :return:
+    :param text: String with info
+    :return: dict for warps
     """
+    warps = {}
+    for line in text.split("\n"):
+        parts = line.strip(",").split(",")
+        warps[parts[0]] = [int(parts[1]), int(parts[2]), int(parts[3])]
+    return warps
+
 
 def read_map_objects(file, w=1, h=1):
     """Get all that work DONE in one method
@@ -469,6 +497,7 @@ def read_map_objects(file, w=1, h=1):
     cats = read_categories(data["categories"])
     dialogue = read_dialogue(data["dialogue"])
     text = read_text(data["text"])
-    map = Map(locations, stuff, tags, dialogue, text, objects, cats, scale)
+    warps = read_warps(data["warps"])
+    map = Map(locations, stuff, tags, dialogue, text, objects, cats, scale, warps)
 
     return map

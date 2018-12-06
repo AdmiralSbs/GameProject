@@ -2,7 +2,6 @@
 import pygame
 import gamebox
 import smartbox
-from smartbox import Dialogue, Handler
 
 is_ready = False
 
@@ -35,19 +34,11 @@ smartbox.camera = camera
 inventory = []
 
 map2: smartbox.Map = smartbox.read_map_objects("map2.csv")
-walls = map2.objects
-items1 = []
 
 player = None
 
-for wall in walls:
-    if "top" in wall.tags:
-        items1.append(wall)
-    if "player" in wall.tags:
-        player = wall
-
-for item in items1:
-    walls.remove(item)
+for thing in map2.get_list("player"):
+    player = thing
 
 max_width = len(map2.locations) * map2.scale
 max_height = smartbox.max_size(map2.locations) * map2.scale
@@ -55,9 +46,9 @@ max_height = smartbox.max_size(map2.locations) * map2.scale
 if player is None:
     player = gamebox.from_color(100, 100, "green", 10, 10)
 
-d: Dialogue = map2.dialogue
-big_dialogue = Dialogue(400, 36)
-d_battle = Dialogue(200, 36)
+d: smartbox.Dialogue = map2.dialogue
+big_dialogue = smartbox.Dialogue(400, 36)
+d_battle = smartbox.Dialogue(200, 36)
 cool_boxes = d.text_sprites_list(map2.text)
 
 disp_pause = False
@@ -83,9 +74,7 @@ def start_screen(keys):
     camera.display()
 
 
-def tick(keys):
-    global timer, timer_end, disp_pause, box, enemy
-    timer += 1
+def gen_move(keys):
     if not disp_pause:
         if pygame.K_a in keys:
             player.move(-5, 0)
@@ -95,32 +84,32 @@ def tick(keys):
             player.move(0, -5)
         if pygame.K_s in keys:
             player.move(0, 5)
+
+
+def tick(keys):
+    global timer, timer_end, disp_pause, box, enemy
+    timer += 1
+    gen_move(keys)
     if pygame.K_SPACE in keys:
-        print("space")
         keys.remove(pygame.K_SPACE)
         if box == "list_pu" or box == "dict_pu":
             disp_pause = False
         elif box == "enemy1":
             disp_pause = False
             battle_prep(player, enemy)
-            items1.remove(enemy)
             disp_pause = False
 
-    for wall in walls:
+    for wall in map2.objects:
         if "wall" in wall.tags:
             if player.touches(wall):
                 player.move_to_stop_overlapping(wall)
-    for item in items1:
-        if "pick_up" in item.tags and 'enemy' not in item.tags:
+    for item in map2.get_list("top"):
+        if "pick_up" in item.tags:
             if player.touches(item):
-                items1.remove(item)
+                map2.remove(item)
                 inventory.append(item)
                 disp_pause = True
-                vals = {
-                    "LIST": "list_pu",
-                    "DICT": "dict_pu",
-                }
-                box = vals[item.name]
+                box = item.name.lower() + "_pu"
 
         if 'enemy' in item.tags:
             if player.touches(item):
@@ -132,14 +121,11 @@ def tick(keys):
     camera.x = min(max(player.x, camera.width / 2), max_width - camera.width / 2)
     camera.y = min(max(player.y, camera.height / 2), max_height - camera.height / 2)
 
-    a, b = d.update_loc(camera)
-
     camera.clear("green")
-    for wall in walls:
-        smartbox.draw_object(wall)
-    for item in items1:
+    for tile in map2.get_list("tile"):
+        smartbox.draw_object(tile)
+    for item in map2.get_list("top"):
         smartbox.draw_object(item)
-
     smartbox.draw_object(player)
 
     if disp_pause:
@@ -159,7 +145,7 @@ def battle_prep(player, enemy):
     cool_lines2_text = [
         "Upsorn is challenged by TA grunt!",
         "1: " + player.move_list[0] + " 2: " + player.move_list[1] + "3: " + player.move_list[2] + " 4: " +
-            player.move_list[3] + " (try all 4 to \"win\")",
+        player.move_list[3] + " (try all 4 to \"win\")",
         "Upsorn used " + player.move_list[0] + " , a student answered!",
         "Upsorn used " + player.move_list[1] + " , she figured out the concept!",
         "Upsorn used " + player.move_list[2] + " , it's surprisingly effective...",
@@ -187,6 +173,7 @@ def battle_prep(player, enemy):
     enemy.y = coords[1][1]
     gamebox._timeron = True
     gamebox.unpause()
+    map2.remove(enemy)
 
 
 stage = "declare"
