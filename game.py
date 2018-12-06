@@ -54,9 +54,8 @@ def calc_maxes():
     max_height = smartbox.max_size(the_map().locations) * the_map().scale
 
 
-calc_maxes()
-
 just_warped = False
+
 
 def warp_player(new_map, xloc, yloc):
     global curr_map
@@ -64,6 +63,8 @@ def warp_player(new_map, xloc, yloc):
     player.x = (xloc + 0.5) * the_map().scale
     player.y = (yloc + 0.5) * the_map().scale
     calc_maxes()
+    print(curr_map)
+
 
 if player is None:
     player = gamebox.from_color(100, 100, "green", 10, 10)
