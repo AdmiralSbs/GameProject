@@ -258,21 +258,65 @@ class Dialogue:
             return sprites
 
 
+def filelocation(file: str, folder: str):
+    """Given the file name, get its correct path string depending if folder exists
+
+    :param file: bare file name
+    :param folder: optional folder
+    :return: the best name for the file
+    """
+    file_check = re.compile(r"[\\/]?([\w]+[.][\w]+)$")
+    file = (file_check.search(file)).groups()[0]
+    if Path(folder).is_dir():
+        file = folder + "\\" + file
+    return file
+
+
+def file_to_string(file, folder):
+    """Gets string from a csv file, stripping extra commas
+    Handles file location possibly not being in the maps folder
+
+    :param file: csv file assumed to be in maps (or in base directory if maps doesn't exist)
+    :return: string version of file
+    """
+    text = ""
+    #if is_map:
+    #    file_type = re.compile(r"(map[\w]+[.]csv)$")
+    #else:
+    file_type = re.compile(r"[\\/]?([\w]+[.][\w]+)$")
+    q = file_type.search(file).groups()[0]
+    if q is not None:
+        file = filelocation(file, folder)
+        try:
+            with open(file, 'r') as reader:
+                for line in reader:
+                    text += line.replace("ï»¿", "").replace("\n", "").strip(",") + "\n"
+        except:
+            raise Exception("File " + file + " not found in maps, or in base directory if maps doesn't exist")
+    else:
+        raise Exception("File " + file + " not in correct csv format")
+    return text
+
+
 class Map:
     """It's got everything in one big package"""
+    categories = []
 
-    def __init__(self, locations, stuff, tags, dialogue, text, objects, categories, scale, warps):
+    def __init__(self, locations, stuff, tags, dialogue, text, objects, scale, warps):
         self.locations = locations
         self.stuff = stuff
         self.tags = tags
         self.dialogue = dialogue
         self.text = text
         self.objects = objects
-        self.categories = categories
+        if Map.categories == []:
+            Map.categories = open(filelocation("categories.csv", "data"), "r").read().split("\n")
+        self.categories = Map.categories
         self.scale = scale
         self.warps = warps
         sort_objects(self)
         self.cool_boxes = self.dialogue.text_sprites_list(self.text)
+        print(self.categories)
 
     def get_list(self, cat_name: str):
         """Get list by name
@@ -295,7 +339,7 @@ class Map:
             self.objects.remove(thing)
             for cat in self.categories:
                 if thing in self.__dict__[str(cat) + "_list"]:
-                     self.__dict__[str(cat) + "_list"].remove(thing)
+                    self.__dict__[str(cat) + "_list"].remove(thing)
 
 
 """This baby's gonna read and write all them damn files so hard, you won't know what hit 'em"""
@@ -312,51 +356,14 @@ def num_or_scale(num, scale: int):
     return scale if num == "scale" else int(num)
 
 
-def filelocation(file: str, folder: str):
-    """Given the file name, get its correct path string depending if folder exists
-
-    :param file: bare file name
-    :param folder: optional folder
-    :return: the best name for the file
-    """
-    file_check = re.compile(r"[\\/]?([\w]+[.][\w]+)$")
-    file = (file_check.search(file)).groups()[0]
-    if Path(folder).is_dir():
-        file = folder + "\\" + file
-    return file
-
-
-def file_to_string(file):
-    """Gets string from a csv file, stripping extra commas
-    Handles file location possibly not being in the maps folder
-
-    :param file: csv file assumed to be in maps (or in base directory if maps doesn't exist)
-    :return: string version of file
-    """
-    text = ""
-    file_type = re.compile(r"(map[\w]+[.]csv)$")
-    q = file_type.search(file).groups()[0]
-    if q is not None:
-        file = filelocation(file, "maps")
-        try:
-            with open(file, 'r') as reader:
-                for line in reader:
-                    text += line.replace("ï»¿", "").replace("\n", "").strip(",") + "\n"
-        except:
-            raise Exception("File " + file + " not found in maps, or in base directory if maps doesn't exist")
-    else:
-        raise Exception("File " + file + " not in correct csv format")
-    return text
-
-
-def read_objects(file: str):
+def read_all_data(file: str):
     """Assuming standard map format, reads map related pieces from map file and separates into manageable
     chunks to be handled by further methods
 
     :param file: File name (assumed to be in maps)
     :return: Dict containing strings of objects in \n format
     """
-    text = file_to_string(file)
+    text = file_to_string(file, "maps")
     pieces = []
     running = ""
     for line in text.split("\n"):
@@ -437,14 +444,6 @@ def read_tags(text):
     return tags
 
 
-def read_categories(text):
-    """Gets the object categories from the text
-
-    :param text: String holding info
-    :return: List"""
-    return text.split("\n")
-
-
 def read_dialogue(text):
     """Get the dialogue from the text
 
@@ -495,17 +494,16 @@ def read_map_objects(file, w=1, h=1):
     :param h: multiple of scale
     :return: objects, data
     """
-    data = read_objects(file)
+    data = read_all_data(file)
     locations = read_locations(data["locations"])
     scale = int(data["scale"])
     stuff = read_stuff(data["stuff"], scale)
     tags = read_tags(data["tags"])
     add_tags_to_dict(stuff, tags)
     objects = create_map_from_list(locations, stuff, scale * w, scale * h)
-    cats = read_categories(data["categories"])
     dialogue = read_dialogue(data["dialogue"])
     text = read_text(data["text"])
     warps = read_warps(data["warps"])
-    map = Map(locations, stuff, tags, dialogue, text, objects, cats, scale, warps)
+    map = Map(locations, stuff, tags, dialogue, text, objects, scale, warps)
 
     return map
