@@ -79,11 +79,12 @@ def make_item(self, name, style, weight):
     self.weight = weight
 
 
-def make_entity(self, name, move_list, health):
+def make_entity(self, name, move_list, level):
     self.name = name
     self.move_list = move_list
-    self.health = health
-    self.max_health = health
+    self.max_health = level * 20
+    self.level = level
+    self.health = self.max_health
 
 
 def add_tags_to_dict(stuff, tags):
@@ -142,7 +143,7 @@ class Handler:
     all_items = {
         "for_loop": for_loop,
         "while_loop": while_loop,
-        "dictionary": dictionary,
+        "dict": dictionary,
         "list": list_,
         "print": print_,
     }

@@ -198,17 +198,17 @@ def tick(keys):
 
 cool_lines2 = None
 
-choices = []
+choices = [0, 0, 0, 0]
 
 
 def battle_prep():
     global cool_lines2, choices, pl, en, box2
-    choices = []
+    choices = [0, 0, 0, 0]
     box2 = 0
     d_battle.update_loc(True)
     cool_lines2_text = [
         "Upsorn is challenged by TA grunt!",
-        "1: " + player.move_list[0] + " 2: " + player.move_list[1] + "3: " + player.move_list[2] + " 4: " +
+        "1: " + player.move_list[0] + " 2: " + player.move_list[1] + " 3: " + player.move_list[2] + " 4: " +
         player.move_list[3] + " (try all 4 to \"win\")",
         "Upsorn used " + player.move_list[0] + " , a student answered!",
         "Upsorn used " + player.move_list[1] + " , she figured out the concept!",
@@ -241,6 +241,7 @@ def battle(keys):
     global box2, choices
 
     if box2 == 1:
+        attacked = True
         if pygame.K_1 in keys:
             box2 = 2
         elif pygame.K_2 in keys:
@@ -249,20 +250,25 @@ def battle(keys):
             box2 = 4
         elif pygame.K_4 in keys:
             box2 = 5
-        if box2 - 1 not in choices:
-            choices.append(box2 - 1)
+        else:
+            attacked = False
+        if attacked:
+            damage = player.level * 5 * (0.5 ** choices[box2-0])
+            enemy.health = max(enemy.health - damage, 0)
         keys.clear()
 
     if pygame.K_SPACE in keys:
         keys.clear()
         if box2 in [0, 6, 7, 8, 9]:
             if box2 != 0:
-                player.health -= 5
+                damage = enemy.level * 5 * (0.5 ** choices[box2 - 0])
+                enemy.health = max(enemy.health - damage, 0)
             if sum(choices) == 10:
                 box2 = 10
             else:
                 box2 = 1
         elif box2 in [2, 3, 4, 5]:
+
             box2 += 4
             enemy.health -= 15
         elif box2 == 10:
