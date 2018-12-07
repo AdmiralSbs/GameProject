@@ -55,13 +55,13 @@ list_pu,You picked up the LIST ability damn right you did boy,,,,,,
 dict_pu,You picked up the DICT ability,,,,,,
 print_pu,You picked up the PRINT statement! Use this to complete (get past) the first PA (gold box),,,,,,
 bob_meet,I can't believe it!  You're still moving...  Prepare to perish!,,,,,,
-gate_print_yes,PASS
-gate_print_no,BLOCKED
-gate_list_yes,PASS
-gate_list_no,BLOCKED
+gate_print_yes,PASS,,,,,,
+gate_print_no,BLOCKED,,,,,,
+gate_list_yes,PASS,,,,,,
+gate_list_no,BLOCKED,,,,,,
 end,,,,,,,
 warps,,,,,,,
 to_map1,1,12,2,,,,
 to_map2,1,17,18,,,,
-to_map3,1,3,9,,,,
+to_map3,1,6,6,,,,
 end,,,,,,,

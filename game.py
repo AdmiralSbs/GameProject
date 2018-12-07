@@ -141,6 +141,13 @@ def tick(keys):
                 if wall.touches(item):
                     item.speedy *= -1
             item.move_speed()
+        if "horizontal" in item.tags and not disp_pause:
+            if item.speedx == 0:
+                item.speedx = 1
+            for wall in the_map().get_list("wall"):
+                if wall.touches(item):
+                    item.speedx *= -1
+            item.move_speed()
 
     for gate in the_map().get_list("gate"):
         if player.touches(gate):
