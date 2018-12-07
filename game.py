@@ -268,7 +268,7 @@ def battle(keys):
             else:
                 box2 = 1
         elif box2 in [2, 3, 4, 5]:
-
+        # hi
             box2 += 4
             enemy.health -= 15
         elif box2 == 10:
