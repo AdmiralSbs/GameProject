@@ -230,6 +230,8 @@ def battle_prep():
     en.x = 300 + camera.left
     en.y = 100 + camera.top
     gamebox.timer_loop(30, battle)
+
+
     gamebox._timeron = True
     gamebox.unpause()
     the_map().remove(enemy)
@@ -249,19 +251,20 @@ def battle(keys):
             box2 = 5
         if box2 - 1 not in choices:
             choices.append(box2 - 1)
-            enemy.health -= 15
         keys.clear()
 
     if pygame.K_SPACE in keys:
         keys.clear()
         if box2 in [0, 6, 7, 8, 9]:
+            if box2 != 0:
+                player.health -= 5
             if sum(choices) == 10:
                 box2 = 10
             else:
                 box2 = 1
         elif box2 in [2, 3, 4, 5]:
             box2 += 4
-            player.health -= 5
+            enemy.health -= 15
         elif box2 == 10:
             gamebox.stop_loop()
     camera.clear("black")
@@ -275,8 +278,8 @@ def battle(keys):
     # pl.y = 100 + camera.top
     # en.x = 300 + camera.left
     # en.y = 100 + camera.top
-    w1 = max((player.max_health - player.health) / player.max_health * 100, 0)
-    w2 = max((enemy.max_health - enemy.health) / enemy.max_health * 100, 0)
+    w1 = min((player.max_health - player.health) / player.max_health * 100, 100)
+    w2 = min((enemy.max_health - enemy.health) / enemy.max_health * 100, 100)
     smartbox.draw_object(gamebox.from_color(100 + camera.left, 25 + camera.top, "green", 100, 30))
     smartbox.draw_object(gamebox.from_color(300 + camera.left, 25 + camera.top, "green", 100, 30))
     h1 = gamebox.from_color(100 + camera.left, 25 + camera.top, "red", w1, 30)
@@ -284,6 +287,7 @@ def battle(keys):
     h2 = gamebox.from_color(100 + camera.left, 25 + camera.top, "red", w2, 30)
     h2.right = 350
     smartbox.draw_object(h1)
+    smartbox.draw_object(h2)
     # h2 = gamebox.from_color(100 + camera.left, 25 + camera.top, "green", 100, 30)
 
     camera.display()
