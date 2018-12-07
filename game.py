@@ -216,11 +216,12 @@ def battle_prep():
         "Upsorn used " + player.move_list[1] + " , she figured out the concept!",
         "Upsorn used " + player.move_list[2] + " , it's surprisingly effective...",
         "Upsorn used " + player.move_list[3] + " , TA remembers why they chose Upsorn",
-        "Enemy used " + enemy.move_list[0] + " , but Upsorn won't understand until she's wiser",
-        "Enemy used " + enemy.move_list[1] + " , but Upsorn's sympathy was already at max",
-        "Enemy used " + enemy.move_list[2] + " , Upsorn doesn't know what's wrong with her code",
-        "Enemy used " + enemy.move_list[3] + " , Upsorn missed the bus trying to finish!",
-        "Enemy couldn't handle the lack of mechanics in this part and faints!",
+        enemy.name + " used " + enemy.move_list[0] + " , but Upsorn won't understand until she's wiser",
+        enemy.name + " used " + enemy.move_list[1] + " , but Upsorn's sympathy was already at max",
+        enemy.name + " used " + enemy.move_list[2] + " , Upsorn doesn't know what's wrong with her code",
+        enemy.name + " used " + enemy.move_list[3] + " , Upsorn missed the bus trying to finish!",
+        enemy.name + " fainted!",
+        player.name + " fainted!"
     ]
     cool_lines2 = d_battle.text_sprites_list(cool_lines2_text)
     pl = player.copy()
@@ -261,16 +262,14 @@ def battle(keys):
     if pygame.K_SPACE in keys:
         keys.clear()
         if box2 in [0, 6, 7, 8, 9]:
-            if box2 != 0:
+            box2 = 1
+        elif box2 in [2, 3, 4, 5]:
+            if enemy.health > 0:
+                box2 += 4
                 damage = enemy.level * 4
                 player.health = max(player.health - damage, 0)
-            if sum(choices) == 10:
-                box2 = 10
             else:
-                box2 = 1
-        elif box2 in [2, 3, 4, 5]:
-            # hi
-            box2 += 4
+                box2 = 10
         elif box2 == 10:
             gamebox.stop_loop()
     camera.clear("black")
