@@ -152,8 +152,6 @@ class Handler:
         "print": print_,
         "if": if_,
         "elseif": elseif_,
-
-
     }
 
     all_entities = {
