@@ -132,6 +132,10 @@ class Handler:
     make_item(list_, "list", 'key', '4')
     print_ = gamebox.from_text(0, 0, "PRINT", 12, "gray", bold=True, italic=False)
     make_item(print_, "print", 'key', '0')
+    if_ = gamebox.from_text(0, 0, "IF", 12, "gray", bold=True, italic=False)
+    make_item(if_, "if", 'key', '6')
+    elseif_ = gamebox.from_text(0, 0, "ELSE_IF", 12, "gray", bold=True, italic=False)
+    make_item(elseif_, "elseif", 'key', '7')
 
     enemy1 = gamebox.from_color(0, 0, 'red', 10, 10)
     make_entity(enemy1, 'Bob', enemy_moves, 50)
@@ -146,6 +150,10 @@ class Handler:
         "dict": dictionary,
         "list": list_,
         "print": print_,
+        "if": if_,
+        "elseif": elseif_,
+
+
     }
 
     all_entities = {
