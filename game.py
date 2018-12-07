@@ -210,16 +210,16 @@ def battle_prep():
     d_battle.update_loc(True)
     cool_lines2_text = [
         "Upsorn is challenged by TA grunt!",
-        "1: " + player.move_list[0] + " 2: " + player.move_list[1] + " 3: " + player.move_list[2] + " 4: " +
-        player.move_list[3] + " (try all 4 to \"win\")",
-        "Upsorn used " + player.move_list[0] + " , a student answered!",
-        "Upsorn used " + player.move_list[1] + " , she figured out the concept!",
-        "Upsorn used " + player.move_list[2] + " , it's surprisingly effective...",
-        "Upsorn used " + player.move_list[3] + " , TA remembers why they chose Upsorn",
-        enemy.name + " used " + enemy.move_list[0] + " , but Upsorn won't understand until she's wiser",
-        enemy.name + " used " + enemy.move_list[1] + " , but Upsorn's sympathy was already at max",
-        enemy.name + " used " + enemy.move_list[2] + " , Upsorn doesn't know what's wrong with her code",
-        enemy.name + " used " + enemy.move_list[3] + " , Upsorn missed the bus trying to finish!",
+        "1: " + player.move_list[0][0] + " 2: " + player.move_list[1][0] + " 3: " + player.move_list[2][0] + " 4: " +
+        player.move_list[3][0],
+        player.name + " used " + player.move_list[0][0] + " , " + player.move_list[0][1],
+        player.name + " used " + player.move_list[1][0] + " , " + player.move_list[1][1],
+        player.name + " used " + player.move_list[2][0] + " , " + player.move_list[2][1],
+        player.name + " used " + player.move_list[3][0] + " , " + player.move_list[3][1],
+        enemy.name + " used " + enemy.move_list[0][0] + " , " + enemy.move_list[0][1],
+        enemy.name + " used " + enemy.move_list[1][0] + " , " + enemy.move_list[1][1],
+        enemy.name + " used " + enemy.move_list[2][0] + " , " + enemy.move_list[2][1],
+        enemy.name + " used " + enemy.move_list[3][0] + " , " + enemy.move_list[3][1],
         enemy.name + " fainted!",
         player.name + " fainted!"
     ]
