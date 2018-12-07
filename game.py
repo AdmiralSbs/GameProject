@@ -152,10 +152,10 @@ def tick(keys):
         if player.touches(gate):
             item = smartbox.Handler.all_items[gate.tags[2]].name.lower()
             if item in inventory:
-                box = "gate_" + item.replace("_","") + "_yes"
+                box = "gate_" + item.replace("_", "") + "_yes"
                 the_gate = gate
             else:
-                box = "gate_" + item.replace("_","") + "_no"
+                box = "gate_" + item.replace("_", "") + "_no"
             disp_pause = True
             player.move_to_stop_overlapping(gate)
             if player.left_touches(gate):
@@ -230,7 +230,6 @@ def battle_prep():
     en.y = 100 + camera.top
     gamebox.timer_loop(30, battle)
 
-
     gamebox._timeron = True
     gamebox.unpause()
     the_map().remove(enemy)
@@ -252,7 +251,7 @@ def battle(keys):
         else:
             attacked = False
         if attacked:
-            damage = player.level * 5 * (0.5 ** choices[box2-0])
+            damage = player.level * 5 * (0.5 ** choices[box2 - 2])
             enemy.health = max(enemy.health - damage, 0)
         keys.clear()
 
@@ -260,16 +259,15 @@ def battle(keys):
         keys.clear()
         if box2 in [0, 6, 7, 8, 9]:
             if box2 != 0:
-                damage = enemy.level * 5 * (0.5 ** choices[box2 - 0])
-                enemy.health = max(enemy.health - damage, 0)
+                damage = enemy.level * 4
+                player.health = max(player.health - damage, 0)
             if sum(choices) == 10:
                 box2 = 10
             else:
                 box2 = 1
         elif box2 in [2, 3, 4, 5]:
-        # hi
+            # hi
             box2 += 4
-            enemy.health -= 15
         elif box2 == 10:
             gamebox.stop_loop()
     camera.clear("black")
