@@ -1,7 +1,7 @@
 locations:,,,,,,,,,,,
 0,0,1,1,1,0,0,0,0,1,1,1
-0,0,1,3|2,1,0,0,0,0,1,3,1
-0,0,1,3|13,1,0,0,0,0,1,3,1
+0,0,1,3|2,1,0,0,0,0,1,3|10,1
+0,0,1,3|13,1,0,0,0,0,1,3|16,1
 0,0,1,3,1,1,1,1,1,1,3,1
 0,0,1,3,3,3,3,3,3,3,3,1
 1,1,1,1,1,1,3,3,3,3,3,1
@@ -31,6 +31,7 @@ stuff:,,,,,,,,,,,
 11,SpriteBox,color,cyan,scale,scale,,,,,,
 12,entity,enemy2,,,,,,,,,
 13,SpriteBox,color,gold,scale,scale,,,,,,
+16,SpriteBox,color,gold,scale,scale,,,,,,
 14,item,if,,,,,,,,,
 15,item,elseif,,,,,,,,,
 end,,,,,,,,,,,
@@ -50,6 +51,7 @@ tags:,,,,,,,,,,,
 13,gate,top,if,,,,,,,,
 14,pick_up,top,,,,,,,,,
 15,pick_up,top,,,,,,,,,
+16,gate,top,while_loop,,,,,,,,
 end,,,,,,,,,,,
 dialogue,,,,,,,,,,,
 100,36,,,,,,,,,,
@@ -74,9 +76,11 @@ gate_if_yes,PASS,,,,,,,,,,
 gate_if_no,BLOCKED,,,,,,,,,,
 gate_elseif_yes,PASS,,,,,,,,,,
 gate_elseif_no,BLOCKED,,,,,,,,,,
+gate_whileloop_no,BLOCKED,,,,,,,,,,
+gate_whileloop_yes,PASS,,,,,,,,,,
 end,,,,,,,,,,,
 warps,,,,,,,,,,,
 to_map1,5,3,6,,,,,,,,
-to_map2,4,4,19,,,,,,,,
+to_map2,1,4,19,,,,,,,,
 to_map3,4,4,19,,,,,,,,
 end,,,,,,,,,,,
