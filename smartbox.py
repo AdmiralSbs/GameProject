@@ -4,8 +4,9 @@ import gamebox
 from pathlib import Path
 import re
 
-camera: gamebox.Camera = None
 
+camera: gamebox.Camera = None
+camera = gamebox.Camera(400,400)
 
 def max_size(listy):
     """Given a 2D list, find the length of the largest list within
@@ -134,12 +135,23 @@ class Handler:
     print_ = gamebox.from_text(0, 0, "PRINT", 12, "gray", bold=True, italic=False)
     if_ = gamebox.from_text(0, 0, "IF", 12, "gray", bold=True, italic=False)
     elseif_ = gamebox.from_text(0, 0, "ELSE_IF", 12, "gray", bold=True, italic=False)
+    else_ = gamebox.from_text(0,0,"ELSE", 12, "green", bold = True, italic = False)
 
     enemy1 = gamebox.from_color(0, 0, 'red', 10, 10)
     make_entity(enemy1, 'Bob', enemy_moves, 1, "Grunt")
     enemy2 = gamebox.from_color(0, 0, 'purple', 10, 10)
     make_entity(enemy2, 'Joe', enemy_moves, 2, "Grunt")
-    upsorn = gamebox.from_color(0, 0, 'yellow', 1, 10)
+    enemy3 = gamebox.from_color(0,0, 'green',100,100)
+    make_entity(enemy3,'Alexander',enemy_moves, 15, 'Boss')
+
+    enemy4 = gamebox.from_color(0, 0, 'green', 10, 10)
+    make_entity(enemy4, 'Andrew', enemy_moves, 3, 'Grunt')
+    enemy5 = gamebox.from_color(0, 0, 'white', 10, 10)
+    make_entity(enemy5, 'Webster', enemy_moves, 4, 'Grunt')
+    enemy6 = gamebox.from_color(0, 0, 'gray', 10, 10)
+    make_entity(enemy6, 'Ruhi', enemy_moves, 5, 'Grunt')
+
+    upsorn = gamebox.from_color(0, 0, 'yellow', 10, 10)
     make_entity(upsorn, 'Upsorn', upsorn_moves, 50, "Prof")
 
     all_items = {
@@ -150,15 +162,20 @@ class Handler:
         "print": print_,
         "if": if_,
         "elseif": elseif_,
+        "else": else_,
     }
 
     for key in all_items.keys():
-        all_items[key].name = key
+       all_items[key].name = key
 
     all_entities = {
         "enemy1": enemy1,
         "upsorn": upsorn,
         "enemy2": enemy2,
+        "enemy3": enemy3,
+        "enemy4": enemy4,
+        "enemy5": enemy5,
+        "enemy6": enemy6,
     }
 
 class Dialogue:

@@ -5,7 +5,7 @@ locations:,,,,,,
 1,3|14,1,3,1,3|14,1
 1,1,1,3,1,1,1
 1,1,1,3,1,1,1
-1,3|5,3|8,3,3|8,3,1
+1,3|5,3|8,3,3|8,3|16,1
 1,1,1,3,1,1,1
 1,1,1,3,1,1,1
 1,3|14,1,3,1,3|2,1
@@ -36,7 +36,8 @@ stuff:,,,,,,
 15,item,elseif,,,,
 6,item,dict,,,,
 7,item,list,,,,
-8,entity,enemy1,,,,
+16,item,else,,,,
+8,entity,enemy6,,,,
 10,SpriteBox,color,cyan,scale,scale,
 11,SpriteBox,color,cyan,scale,scale,
 12,SpriteBox,color,darkred,scale,scale,
@@ -58,6 +59,7 @@ tags:,,,,,,
 13,gate,top,,,,
 14,tile,to_map3,warp,,,
 15,pick_up,top,,,,
+16,pick_up,top,,,,
 end,,,,,,
 dialogue,,,,,,
 100,36,,,,,
@@ -65,9 +67,11 @@ end,,,,,,
 text,,,,,,
 list_pu,You picked up the LIST ability damn right you did boy,,,,,
 dict_pu,You picked up the DICT ability,,,,,
-while_pu,You picked up the WHILE ability,,,,,
+while_loop_pu,You picked up the WHILE ability,,,,,
 elseif_pu,You picked up the ELSEIF ability,,,,,
+else_pu,You picked up the ELSE ability,,,,,
 bob_meet,I can't believe it!  You're still moving...  Prepare to perish!,,,,,
+ruhi_meet,Stop! Evil shall prevail when I kill you!,,,,,
 end,,,,,,
 warps,,,,,,
 to_map1,3,6,6,,,

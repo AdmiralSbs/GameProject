@@ -28,9 +28,8 @@ Collectibles - Power ups can spawn that will affect gameplay (implemented)
 Intersession Progress - Game will autosave on quit, and allow for manual saves as well (nyi)
 """
 
-camera = gamebox.Camera(400, 400)
-smartbox.camera = camera
-
+#camera = gamebox.Camera(400, 400)
+camera = smartbox.camera
 inventory = []
 
 maps = [
