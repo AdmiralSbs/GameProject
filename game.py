@@ -165,7 +165,7 @@ def tick(keys):
                 player.y -= 5
             if player.right_touches(gate):
                 player.x -= 5
-            if player.bottom_touches(gate):
+            if playder.bottom_touches(gate):
                 player.y += 5
 
     check = False
