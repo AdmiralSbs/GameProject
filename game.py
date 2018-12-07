@@ -202,8 +202,9 @@ choices = []
 
 
 def battle_prep():
-    global cool_lines2, choices, pl, en
+    global cool_lines2, choices, pl, en, box2
     choices = []
+    box2 = 0
     d_battle.update_loc(True)
     cool_lines2_text = [
         "Upsorn is challenged by TA grunt!",
@@ -234,9 +235,6 @@ def battle_prep():
     the_map().remove(enemy)
 
 
-box2 = 0
-
-
 def battle(keys):
     global box2, choices
 
@@ -251,6 +249,7 @@ def battle(keys):
             box2 = 5
         if box2 - 1 not in choices:
             choices.append(box2 - 1)
+            enemy.health -= 15
         keys.clear()
 
     if pygame.K_SPACE in keys:
@@ -276,12 +275,15 @@ def battle(keys):
     # pl.y = 100 + camera.top
     # en.x = 300 + camera.left
     # en.y = 100 + camera.top
-    #smartbox.draw_object(gamebox.from_color(100 + camera.left, 25 + camera.top, "green", 100, 30))
-    #h1 = gamebox.from_color(100 + camera.left, 25 + camera.top, "red", 100, 30)
-    #h1.width = max((player.max_health - player.health) / player.max_health * 100, 0)
-    #h1.right = 150
-    #smartbox.draw_object(h1)
-    # print(h1)
+    w1 = max((player.max_health - player.health) / player.max_health * 100, 0)
+    w2 = max((enemy.max_health - enemy.health) / enemy.max_health * 100, 0)
+    smartbox.draw_object(gamebox.from_color(100 + camera.left, 25 + camera.top, "green", 100, 30))
+    smartbox.draw_object(gamebox.from_color(300 + camera.left, 25 + camera.top, "green", 100, 30))
+    h1 = gamebox.from_color(100 + camera.left, 25 + camera.top, "red", w1, 30)
+    h1.right = 150
+    h2 = gamebox.from_color(100 + camera.left, 25 + camera.top, "red", w2, 30)
+    h2.right = 350
+    smartbox.draw_object(h1)
     # h2 = gamebox.from_color(100 + camera.left, 25 + camera.top, "green", 100, 30)
 
     camera.display()
