@@ -60,7 +60,6 @@ def warp_player(new_map, xloc, yloc):
     player.x = (xloc + 0.5) * the_map().scale
     player.y = (yloc + 0.5) * the_map().scale
     calc_maxes()
-    print(curr_map)
 
 
 player = smartbox.Handler.upsorn
@@ -165,7 +164,7 @@ def tick(keys):
                 player.y -= 5
             if player.right_touches(gate):
                 player.x -= 5
-            if playder.bottom_touches(gate):
+            if player.bottom_touches(gate):
                 player.y += 5
 
     check = False
