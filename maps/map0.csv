@@ -1,13 +1,13 @@
 ﻿locations:,,,,,,,
 1,1,1,1,1,1,1,0
-1,2,3|12,3,3|12,10,1,0
+1,2,3|12,3,1,1,1,0
 1,1,1,3,1,1,1,0
 1,1,1,3,1,1,1,0
 1,1,1,3,1,1,1,1
 1,9|3,3,3,3,3,3,1
 1,1,1,1,1,1,3,1
-0,0,1,1,11,1,3,1
-0,0,1,1,3|13,3|8,3,1
+0,0,1,1,11,1,3|13,1
+0,0,1,1,3,3|8,3,1
 0,0,1,1,1,1,1,1
 0,0,0,0,0,0,0,0
 0,0,0,0,0,0,0,0
@@ -20,50 +20,36 @@ stuff:,,,,,,,
 1,SpriteBox,color,blue,scale,scale,,
 2,SpriteBox,color,cyan,scale,scale,,
 3,SpriteBox,color,darkblue,scale,scale,,
-4,item,for_loop,,,,,
-5,item,while_loop,,,,,
-6,item,dict,,,,,
-7,item,list,,,,,
 8,entity,enemy1,,,,,
 9,item,print,,,,,
 10,SpriteBox,color,cyan,scale,scale,,
 11,SpriteBox,color,cyan,scale,scale,,
 12,SpriteBox,color,gold,25,scale,,
-13,SpriteBox,color,gold,scale,scale,,
+13,SpriteBox,color,gold,scale,25,,
 end,,,,,,,
 tags:,,,,,,,
 0,,,,,,,
 1,tile,wall,,,,,
 2,tile,to_map1,warp,,,,
-10,tile,to_map2,warp,,,,
 11,tile,to_map3,warp,,,,
 3,tile,,,,,,
-4,pick_up,top,,,,,
-5,pick_up,top,,,,,
-6,pick_up,top,,,,,
-7,pick_up,top,,,,,
 9,pick_up,top,,,,,
 8,enemy,top,vertical,,,,
-12,gate,top,else,,,,
+12,gate,top,regex,,,,
 13,gate,top,print,,,,
 end,,,,,,,
 dialogue,,,,,,,
 100,36,,,,,,
 end,,,,,,,
 text,,,,,,,
-list_pu,You picked up the LIST ability damn right you did boy,,,,,,
-dict_pu,You picked up the DICT ability,,,,,,
 print_pu,You picked up the PRINT statement! Use this to complete (get past) the first PA (gold box),,,,,,
 bob_meet,I can't believe it!  You're still moving...  Prepare to perish!,,,,,,
-gate_print_yes,PASS,,,,,,
-gate_print_no,BLOCKED,,,,,,
-gate_list_yes,PASS,,,,,,
-gate_list_no,BLOCKED,,,,,,
-gate_else_no,BLOCKED,,,,,,
-gate_else_yes,PASS,,,,,,
+gate_print_yes,Passed PA 01 (greeting) with PRINT,,,,,,
+gate_print_no,Failed PA 01 (greeting): you require PRINT,,,,,,
+gate_regex_no,Failed PA 21 (salary): you require REGEX,,,,,,
+gate_regex_yes,Passed PA 21 (salary) with REGEX,,,,,,
 end,,,,,,,
 warps,,,,,,,
 to_map1,4,4,19,,,,
-to_map2,0,4,1,,,,
 to_map3,1,6,6,,,,
 end,,,,,,,

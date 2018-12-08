@@ -2,16 +2,17 @@
 import pygame
 import gamebox
 import smartbox
+import math
 
-is_ready = False
+win = False
 
-info = """
+TA_info = """
 The TAs have rebelled! They are strongly unstatisfied with their mediocre pay and lack of college credit! They DEMAND
 reform and so have attempted to...dun dun da..UNIONIZE! You, the fearless capitalist, cannot allow this to happen. But
 OH NO, the TAs, under the leadership of the dreaded TA Alexander, have kidnapped Professor Upsorn and trapped her in 
 the Archimedes Server, trapped under her own assignments! It is your job to help her complete the PAs and defeat TAs!
 
-It's basically Pokemon.
+It's basically Pokemon/Undertale.
 
 Players will move around a 2d map, collect items, and engage in pokemon style combat with enemies. They will have to 
 defeat a final boss.
@@ -22,15 +23,17 @@ The PA's are some of our "favorites" that will basically be like strength boulde
 specific skills relating to the class serving like HMs that allow you to further progress in the game.
 
 Optional Features:
-Health Bar - Will be present during battle. A loss requires reloading a previous save (DOOM style) (nyi)
-Scrolling level - camera will be zoomed in on map based on distance between players (implemented)
-Collectibles - Power ups can spawn that will affect gameplay (implemented)
-Intersession Progress - Game will autosave on quit, and allow for manual saves as well (nyi)
+Health Bar - Will be present during battle. A loss requires restarting the game (you learn from loss anyhow)
+Scrolling level - camera will be zoomed in on map based on distance between players
+Collectibles - Power ups can spawn that will affect gameplay
+Enemies - They're there, they move, they are both easily handled and can easily handle you
+File Reading - Every map comes from a file
 """
 
-#camera = gamebox.Camera(400, 400)
+
 camera = smartbox.camera
 inventory = []
+kills = 0
 
 maps = [
     smartbox.read_map_objects("map0.csv"),
@@ -61,6 +64,9 @@ def warp_player(new_map, xloc, yloc):
     curr_map = new_map
     player.x = (xloc + 0.5) * the_map().scale
     player.y = (yloc + 0.5) * the_map().scale
+    if curr_map == 4:
+        global kills
+        kills += 2
     calc_maxes()
 
 
@@ -74,20 +80,34 @@ d_battle: smartbox.Dialogue = smartbox.Dialogue(200, 36)
 disp_pause = False
 box = "list_pu"
 enemy = None
-info2 = """Peep game.py and the readme.txt for some cool stuff. Use WASD to move around, and touch the red guy to start
-a fight.  Oooh, spooky.  WELCOME TO ESCAPE FROM ARCHIMEDES: ATTACK OF THE TA's AND THE PA's.  Oooh, aaah.  SPACE to
-get out of these text situations, 1-4 when appropriate. X-ing out the window enough times closes it.  Please hit up the
-readme.txt
-"""
-the_big_sheet = big_dialogue.create_text_sprites(big_dialogue.calc_lines(info2))
+info = []
+info.append("{Press Space} Dear TA: Please read game.py for what you need in terms of grading")
+info.append("""The TAs have rebelled! They DEMAND wage reform and have attempted to UNIONIZE! The TAs, under the 
+leadership of the dreaded TA Alexander, have kidnapped Professor Upsorn and trapped her in the Archimedes Server,
+under the weight of her own assignments! It is your job to help her complete the PAs and defeat the TAs! {Press Space}""")
+info.append("""Welcome to ESCAPE FROM ARCHIMEDES!!! Play as Upsorn (the yellow square) to escape the Archimedes
+server. Use W-A-S-D to move around and SPACE to advance through text.  Python skills are lying on the ground to pick up,
+just walk to them. Use them to complete PA's and advance.""")
+info.append("""Moving squares are unionizing TA's, touch them to start a battle. You will have four attacks at your disposal.
+Press 1-2-3-4 to select your attack for the turn. They all do the same damage, but are weaker the second time.
+Your health resets after each battle. Pick up skills and defeat weaker TA's to get stronger. 
+You'll need everything you have to defeat the great TA Alexander.""")
+
+the_big_sheet = big_dialogue.text_sprites_list(info)
+box3 = 0
 
 
 def start_screen(keys):
+    global box3
     if pygame.K_SPACE in keys:
-        gamebox.stop_loop()
+        box3 += 1
+        if box3 == len(the_big_sheet):
+            gamebox.stop_loop()
+            return
+        keys.clear()
     camera.clear("white")
     smartbox.draw_object(big_dialogue.background)
-    for t in the_big_sheet:
+    for t in the_big_sheet[box3]:
         smartbox.draw_object(t)
     camera.display()
 
@@ -114,6 +134,9 @@ def tick(keys):
         elif "meet" in box:
             battle_prep()
             disp_pause = False
+            if player.health <= 0 or win:
+                gamebox.stop_loop()
+                return
         elif "_yes" in box:
             disp_pause = False
             the_map().remove(the_gate)
@@ -130,6 +153,8 @@ def tick(keys):
             box = item.name.lower() + "_pu"
 
     for item in the_map().get_list("enemy"):
+        if item.health == 0:
+            continue
         if player.touches(item):
             player.move_to_stop_overlapping(item)
             enemy = item
@@ -154,20 +179,20 @@ def tick(keys):
         if player.touches(gate):
             item = smartbox.Handler.all_items[gate.tags[2]].name.lower()
             if item in inventory:
-                box = "gate_" + item.replace("_", "") + "_yes"
+                box = "gate_" + item + "_yes"
                 the_gate = gate
             else:
-                box = "gate_" + item.replace("_", "") + "_no"
+                box = "gate_" + item + "_no"
             disp_pause = True
             player.move_to_stop_overlapping(gate)
             if player.left_touches(gate):
                 player.x += 5
             if player.top_touches(gate):
-                player.y -= 5
+                player.y += 5
             if player.right_touches(gate):
                 player.x -= 5
             if player.bottom_touches(gate):
-                player.y += 5
+                player.y -= 5
 
     check = False
     for warp in the_map().get_list("warp"):
@@ -204,11 +229,15 @@ choices = [0, 0, 0, 0]
 
 def battle_prep():
     global cool_lines2, choices, pl, en, box2
+    player.level = len(inventory)
+    player.max_health = player.level * 20
+    player.health = player.max_health
+
     choices = [0, 0, 0, 0]
     box2 = 0
     d_battle.update_loc(True)
     cool_lines2_text = [
-        "Upsorn is challenged by TA grunt!",
+        player.name + " is challenged by TA " + enemy.title + " " + enemy.name + "!",
         "1: " + player.move_list[0][0] + " 2: " + player.move_list[1][0] + " 3: " + player.move_list[2][0] + " 4: " +
         player.move_list[3][0],
         player.name + " used " + player.move_list[0][0] + " , " + player.move_list[0][1],
@@ -223,7 +252,7 @@ def battle_prep():
         player.name + " fainted!"
     ]
     cool_lines2 = d_battle.text_sprites_list(cool_lines2_text)
-    pl = player.copy()
+    pl = gamebox.from_image(0, 0, 'images\\Upsorn.png')
     en = enemy.copy()
     pl.scale_by(100 / pl.height)
     en.scale_by(100 / en.height)
@@ -231,11 +260,20 @@ def battle_prep():
     pl.y = 100 + camera.top
     en.x = 300 + camera.left
     en.y = 100 + camera.top
+
     gamebox.timer_loop(30, battle)
 
     gamebox._timeron = True
     gamebox.unpause()
-    the_map().remove(enemy)
+
+    if (enemy.health <= 0):
+        if enemy.level == 11:
+            global win
+            win = True
+        the_map().remove(enemy)
+        player.health = player.max_health
+        global kills
+        kills += 1
 
 
 def battle(keys):
@@ -254,14 +292,18 @@ def battle(keys):
         else:
             attacked = False
         if attacked:
-            damage = player.level * 5 * (0.5 ** choices[box2 - 2])
+            damage = math.ceil(player.level * 5 * (0.5 ** choices[box2 - 2])) + kills
             enemy.health = max(enemy.health - damage, 0)
+            choices[box2 - 2] += 1
         keys.clear()
 
     if pygame.K_SPACE in keys:
         keys.clear()
         if box2 in [0, 6, 7, 8, 9]:
-            box2 = 1
+            if player.health > 0:
+                box2 = 1
+            else:
+                box2 = 11
         elif box2 in [2, 3, 4, 5]:
             if enemy.health > 0:
                 box2 += 4
@@ -269,7 +311,7 @@ def battle(keys):
                 player.health = max(player.health - damage, 0)
             else:
                 box2 = 10
-        elif box2 == 10:
+        elif box2 == 10 or box2 == 11:
             gamebox.stop_loop()
     camera.clear("black")
 
@@ -278,21 +320,30 @@ def battle(keys):
         smartbox.draw_object(thing)
     smartbox.draw_object(pl)
     smartbox.draw_object(en)
-    # pl.x = 100 + camera.left
-    # pl.y = 100 + camera.top
-    # en.x = 300 + camera.left
-    # en.y = 100 + camera.top
     w1 = min((player.max_health - player.health) / player.max_health * 100, 100)
     w2 = min((enemy.max_health - enemy.health) / enemy.max_health * 100, 100)
-    smartbox.draw_object(gamebox.from_color(100 + camera.left, 25 + camera.top, "green", 100, 30))
-    smartbox.draw_object(gamebox.from_color(300 + camera.left, 25 + camera.top, "green", 100, 30))
-    h1 = gamebox.from_color(100 + camera.left, 25 + camera.top, "red", w1, 30)
-    h1.right = 150
-    h2 = gamebox.from_color(100 + camera.left, 25 + camera.top, "red", w2, 30)
-    h2.right = 350
+    g1 = gamebox.from_color(100 + camera.left, 25 + camera.top, "green", 100, 30)
+    g2 = gamebox.from_color(300 + camera.left, 25 + camera.top, "green", 100, 30)
+    h1 = gamebox.from_color(0, 25 + camera.top, "red", w1, 30)
+    h1.right = g1.right
+    h2 = gamebox.from_color(0, 25 + camera.top, "red", w2, 30)
+    h2.right = g2.right
+
+    t1 = str(player.title) + " " + str(player.name) + " (" + str(player.level) + ")"
+    t11 = gamebox.from_text(0, 175 + camera.top, t1, 24, "gold")
+    t11.left = g1.left
+    t2 = str(enemy.title) + " " + str(enemy.name) + " (" + str(enemy.level) + ")"
+    t22 = gamebox.from_text(0, 175 + camera.top, t2, 24, "gold")
+    t22.right = g2.right
+
+    smartbox.draw_object(t11)
+    smartbox.draw_object(t22)
+    smartbox.draw_object(g1)
+    smartbox.draw_object(g2)
     smartbox.draw_object(h1)
     smartbox.draw_object(h2)
-    # h2 = gamebox.from_color(100 + camera.left, 25 + camera.top, "green", 100, 30)
+    smartbox.draw_object(gamebox.from_text(g1.x, g1.y, str(player.health) + "/" + str(player.max_health), 40, "gold"))
+    smartbox.draw_object(gamebox.from_text(g2.x, g2.y, str(enemy.health) + "/" + str(enemy.max_health), 40, "gold"))
 
     camera.display()
 
@@ -300,3 +351,26 @@ def battle(keys):
 playing = True
 gamebox.timer_loop(30, start_screen)
 gamebox.timer_loop(30, tick)
+if player.health <= 0:
+    info_end = "Well, you lost, big OOF"
+elif win:
+    info_end = """Yo-yo-you did it?!?  You defeated the Great TA Alexander?  Unbelievable!  Tbh this was in honor of all
+    we've learned this year in CS, because we really did get better (hence this game).  If you legit beat the game, you
+    had to defeat every enemy, so props to you!  Thanks so much for playing!"""
+else:
+    info_end = "Quitter, you didn't bother to try..."
+the_big_sheet = big_dialogue.create_text_sprites(big_dialogue.calc_lines(info_end))
+big_dialogue.update_loc(True)
+
+
+def end_screen(keys):
+    if pygame.K_SPACE in keys:
+        gamebox.stop_loop()
+    camera.clear("white")
+    smartbox.draw_object(big_dialogue.background)
+    for t in the_big_sheet:
+        smartbox.draw_object(t)
+    camera.display()
+
+
+gamebox.timer_loop(30, end_screen)

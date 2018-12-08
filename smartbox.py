@@ -4,9 +4,8 @@ import gamebox
 from pathlib import Path
 import re
 
+camera = gamebox.Camera(400, 400)
 
-camera: gamebox.Camera = None
-camera = gamebox.Camera(400,400)
 
 def max_size(listy):
     """Given a 2D list, find the length of the largest list within
@@ -128,55 +127,58 @@ class Handler:
         ['Make lab harder at 3:12pm', 'Upsorn missed the bus trying to finish!']
     ]
 
-    for_loop = gamebox.from_text(0, 0, "FOR", 12, "yellow", bold=True, italic=False)
-    while_loop = gamebox.from_text(0, 0, "WHILE", 12, "red", bold=True, italic=False)
-    dictionary = gamebox.from_text(0, 0, "DICT", 12, "lightblue", bold=True, italic=False)
-    list_ = gamebox.from_text(0, 0, "LIST", 12, "gray", bold=True, italic=False)
+    def_ = gamebox.from_text(0, 0, "DEF", 12, "yellow", bold=True, italic=False)
+    urllib = gamebox.from_text(0, 0, "URLLIB", 12, "red", bold=True, italic=False)
+    for_while = gamebox.from_text(0, 0, "FOR/WHILE", 12, "lightblue", bold=True, italic=False)
+    list_dict = gamebox.from_text(0, 0, "LIST/DICT", 12, "pink", bold=True, italic=False)
     print_ = gamebox.from_text(0, 0, "PRINT", 12, "gray", bold=True, italic=False)
-    if_ = gamebox.from_text(0, 0, "IF", 12, "gray", bold=True, italic=False)
-    elseif_ = gamebox.from_text(0, 0, "ELSE_IF", 12, "gray", bold=True, italic=False)
-    else_ = gamebox.from_text(0,0,"ELSE", 12, "green", bold = True, italic = False)
+    if_ = gamebox.from_text(0, 0, "IF", 12, "purple", bold=True, italic=False)
+    regex = gamebox.from_text(0, 0, "REGEX", 12, "orange", bold=True, italic=False)
+    gamebox_ = gamebox.from_text(0, 0, "GAMEBOX", 12, "green", bold=True, italic=False)
+
+    all_items = {
+        "print": print_,
+        "def": def_,
+        "if": if_,
+        "for/while": for_while,
+        "list/dict": list_dict,
+        "urllib": urllib,
+        "regex": regex,
+        "gamebox": gamebox_,
+    }
 
     enemy1 = gamebox.from_color(0, 0, 'red', 10, 10)
     make_entity(enemy1, 'Bob', enemy_moves, 1, "Grunt")
     enemy2 = gamebox.from_color(0, 0, 'purple', 10, 10)
     make_entity(enemy2, 'Joe', enemy_moves, 2, "Grunt")
-    enemy3 = gamebox.from_color(0,0, 'green',100,100)
-    make_entity(enemy3,'Alexander',enemy_moves, 15, 'Boss')
+    enemy3 = gamebox.from_image(0, 0, 'images\\waluigi.png')
+    make_entity(enemy3, 'Alexander', enemy_moves, 11, 'Boss')
+    enemy3.width = 100
+    enemy3.height = 100
 
     enemy4 = gamebox.from_color(0, 0, 'green', 10, 10)
-    make_entity(enemy4, 'Andrew', enemy_moves, 3, 'Grunt')
+    make_entity(enemy4, 'Andrew', enemy_moves, 4, 'Grunt')
     enemy5 = gamebox.from_color(0, 0, 'white', 10, 10)
-    make_entity(enemy5, 'Webster', enemy_moves, 4, 'Grunt')
+    make_entity(enemy5, 'Webster', enemy_moves, 6, 'Grunt')
     enemy6 = gamebox.from_color(0, 0, 'gray', 10, 10)
-    make_entity(enemy6, 'Ruhi', enemy_moves, 5, 'Grunt')
+    make_entity(enemy6, 'Ruhi', enemy_moves, 8, 'Grunt')
 
     upsorn = gamebox.from_color(0, 0, 'yellow', 10, 10)
-    make_entity(upsorn, 'Upsorn', upsorn_moves, 50, "Prof")
-
-    all_items = {
-        "for_loop": for_loop,
-        "while_loop": while_loop,
-        "dict": dictionary,
-        "list": list_,
-        "print": print_,
-        "if": if_,
-        "elseif": elseif_,
-        "else": else_,
-    }
+    make_entity(upsorn, 'Upsorn', upsorn_moves, 0, "Prof")
 
     for key in all_items.keys():
-       all_items[key].name = key
+        all_items[key].name = key
 
     all_entities = {
-        "enemy1": enemy1,
-        "upsorn": upsorn,
-        "enemy2": enemy2,
-        "enemy3": enemy3,
-        "enemy4": enemy4,
-        "enemy5": enemy5,
-        "enemy6": enemy6,
+        "upsorn": upsorn,  # Upsorn
+        "enemy1": enemy1,  # Bob
+        "enemy2": enemy2,  # Joe
+        "enemy3": enemy3,  # Alexander
+        "enemy4": enemy4,  # Andrew
+        "enemy5": enemy5,  # Webster
+        "enemy6": enemy6,  # Ruhi
     }
+
 
 class Dialogue:
     """This class handles the display of text in a "dialogue box" format similar to pokemon
@@ -284,6 +286,7 @@ class Dialogue:
                 sprites[key] = s
             return sprites
 
+
 def filelocation(file: str, folder: str):
     """Given the file name, get its correct path string depending if folder exists
 
@@ -296,6 +299,7 @@ def filelocation(file: str, folder: str):
     if Path(folder).is_dir():
         file = folder + "\\" + file
     return file
+
 
 def file_to_string(file, folder):
     """Gets string from a csv file, stripping extra commas
@@ -322,6 +326,7 @@ def file_to_string(file, folder):
         raise Exception("File " + file + " not in correct csv format")
     return text
 
+
 class Map:
     """It's got everything in one big package"""
     categories = []
@@ -340,7 +345,6 @@ class Map:
         self.warps = warps
         sort_objects(self)
         self.cool_boxes = self.dialogue.text_sprites_list(self.text)
-        print(self.categories)
 
     def get_list(self, cat_name: str):
         """Get list by name
@@ -365,9 +369,11 @@ class Map:
                 if thing in self.__dict__[str(cat) + "_list"]:
                     self.__dict__[str(cat) + "_list"].remove(thing)
 
+
 """This baby's gonna read and write all them damn files so hard, you won't know what hit 'em"""
 
 standard_headers = ["locations", "stuff", "tags", "dialogue", "text", "scale", "categories", "warps"]
+
 
 def num_or_scale(num, scale: int):
     """
@@ -376,6 +382,7 @@ def num_or_scale(num, scale: int):
     :return: The integer or the value of scale
     """
     return scale if num == "scale" else int(num)
+
 
 def read_all_data(file: str):
     """Assuming standard map format, reads map related pieces from map file and separates into manageable
@@ -404,6 +411,7 @@ def read_all_data(file: str):
         dicty[key] = val
     return dicty
 
+
 def read_locations(text):
     """Given a string that holds the numbers as they will appear
     Reads in the information, transposes as required and returns
@@ -421,6 +429,7 @@ def read_locations(text):
                     piece = 0
             lines.append(q)
     return transpose(lines)
+
 
 def read_stuff(text: str, scale: int):
     """Given a string holding info for a stuff in file format, create a stuff dict
@@ -448,6 +457,7 @@ def read_stuff(text: str, scale: int):
 
     return stuff
 
+
 def read_tags(text):
     """Given a string holding info for a stuff in file format, create a stuff dict
 
@@ -461,6 +471,7 @@ def read_tags(text):
         tags[key] = val
     return tags
 
+
 def read_dialogue(text):
     """Get the dialogue from the text
 
@@ -469,6 +480,7 @@ def read_dialogue(text):
     parts = text.split(",")
     d = Dialogue(int(parts[0]), int(parts[1]))
     return d
+
 
 def read_text(text):
     """Get the lines of dialogue from the text
@@ -488,6 +500,7 @@ def read_text(text):
         all_text[keys[i]] = vals[i]
     return all_text
 
+
 def read_warps(text):
     """Read the warps
 
@@ -499,6 +512,7 @@ def read_warps(text):
         parts = line.strip(",").split(",")
         warps[parts[0]] = [int(parts[1]), int(parts[2]), int(parts[3])]
     return warps
+
 
 def read_map_objects(file, w=1, h=1):
     """Get all that work DONE in one method
