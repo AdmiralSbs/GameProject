@@ -64,9 +64,6 @@ def warp_player(new_map, xloc, yloc):
     curr_map = new_map
     player.x = (xloc + 0.5) * the_map().scale
     player.y = (yloc + 0.5) * the_map().scale
-    if curr_map == 4:
-        global kills
-        kills += 2
     calc_maxes()
 
 
